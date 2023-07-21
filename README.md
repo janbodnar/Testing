@@ -40,7 +40,7 @@ Linting and debugging is usually done by developers. Testing is done by testers.
 
 ## Other definitions 
 
- *Test coverage* is defined is a software testing metric that indicates the quantity of testing completed  
+ *Test coverage* is a software testing metric that indicates the quantity of testing completed  
  by a collection of tests. It helps identify areas that are missing or not validated.
 
 
