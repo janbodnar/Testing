@@ -71,11 +71,11 @@ working correctly. It is used to quickly identify and fix any major issues with 
 before more detailed testing is performed. The goal of smoke testing is to determine whether   
 the build is stable enough to proceed with further testing. 
 
-- Smoke testing is a type of software testing performed early in the development process
+- performed early in the development process
 - The goal is to quickly identify and fix major issues with the software
 - It tests the most critical functions of the application
 - Helps to determine if the build is stable enough to proceed with further testing
-- It is also known as Build Verification Testing or Build Acceptance Testing.
+- Synonyms: confidence testing, build verification testing, or build acceptance testing
 
 
 Smoke testing is also done by testers before accepting a build for further testing.
