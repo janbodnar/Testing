@@ -38,4 +38,15 @@ Linting and debugging is usually done by developers. Testing is done by testers.
 - Functional test: checks a single bit of software functionality, such as addition or deletion of a user.
 
 
+## Other definitions 
+
+ *Test coverage* is defined is a software testing metric that indicates the quantity of testing completed  
+ by a collection of tests. It helps identify areas that are missing or not validated.
+
+
+
+
+
+
+
 
