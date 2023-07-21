@@ -12,10 +12,10 @@ Python testing course
 Linting and debugging is usually done by developers. Testing is done by testers. 
 
 
-*Software reliability* describes the ability of a system to keep functioning under
-specific use over a specific period. 
-*Software usability* is the degree of how the users find the software product easy to use. 
-It describes the overall user experience with the product.
-*Fault tolerance* is the capability of the software product to maintain a
-specified level of performance or to recover from faults such as software
-faults, environment failures, wrong use of interface, or incorrect input.
+*Software reliability* describes the ability of a system to keep functioning under  
+specific use over a specific period.  
+*Software usability* is the degree of how the users find the software product easy to use.  
+It describes the overall user experience with the product. 
+*Fault tolerance* is the capability of the software product to maintain a  
+specified level of performance or to recover from faults such as software  
+faults, environment failures, wrong use of interface, or incorrect input.  
