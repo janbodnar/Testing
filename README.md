@@ -34,6 +34,16 @@ Linting and debugging is usually done by developers. Testing is done by testers.
   are combined and tested as a group. (We check if a function saves data into a database table.)  
 - End-to-end test: a testing method that evaluates the entire application flow, from start to finish.
 - Functional test: checks a single bit of software functionality, such as addition or deletion of a user.
+- Regression test: conducted after a code update to ensure that the update introduced no new bugs.
+- Performance test: how software performs under different workloads.
+- Stress test: how much strain the system can take before it fails.
+
+### Functional vs nonfunctional testing  
+
+Smoke Testing, Unit Testing, and Database Testing are all types of functional testing.  
+Non-functional testing comprises the behaviour aspect of the system, i.e., performance, stress, etc.  
+Performance testing, usability testing, and volume testing are all types of non-functional testing.  
+
 
 ## Test case 
 
@@ -69,12 +79,6 @@ Example of a test suite for purchasing a product, having 4 test cases:
 Test coverage is a software testing metric that indicates the quantity of testing completed  
 by a collection of tests. It helps identify areas that are missing or not validated.
 
-
-## Functional vs nonfunctional testing  
-
-Smoke Testing, Unit Testing, and Database Testing are all types of functional testing.  
-Non-functional testing comprises the behaviour aspect of the system, i.e., performance, stress, etc.  
-Performance testing, usability testing, and volume testing are all types of non-functional testing.  
 
 ## Smoke testing 
 
