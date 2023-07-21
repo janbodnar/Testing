@@ -2,8 +2,6 @@
 Python testing course
 
 
-
-
 ## Software characteristics 
 
 - *Software reliability* describes the ability of a system to keep functioning under  
@@ -36,6 +34,21 @@ Linting and debugging is usually done by developers. Testing is done by testers.
   are combined and tested as a group. (We check if a function saves data into a database table.)  
 - End-to-end test: a testing method that evaluates the entire application flow, from start to finish.
 - Functional test: checks a single bit of software functionality, such as addition or deletion of a user.
+
+## Test case 
+
+A test case is a document which consists of a set of conditions or actions which are performed  
+on the software application in order to verify the expected functionality of the feature.  
+
+    Test Case ID 
+    Test case Description/Summary
+    Test steps 
+    Pre-requisites 
+    Test category
+    Author
+    Automation 
+    Pass/fail
+    Remarks
 
 
 ## Other definitions 
