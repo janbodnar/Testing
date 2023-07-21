@@ -14,6 +14,13 @@ Python testing course
 - *Software maintainability* is defined as the degree to which an application is understood,  
   repaired, or enhanced.  
 
+## Failures, faults, errors
+
+A failure is a difference from the expected result. This is the problem we observe. A fault is the  
+cause of the failure. (For instance, a developer's mistake or an omission in planning.)  
+An error is the actual mistake which caused the fault to occur. (A typo, a stack overflow, an SQL injection.)  
+
+
 ## Processes 
 
  - *Linting*: the process of running a program that statically analyses code for potential errors.  
