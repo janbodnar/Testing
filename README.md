@@ -40,7 +40,7 @@ Linting and debugging is usually done by developers. Testing is done by testers.
 
 ### Functional vs nonfunctional testing  
 
-Smoke Testing, Unit Testing, and Database Testing are all types of functional testing.  
+Unit Testing, integration testing, and end-to-end testing are all types of functional testing.  
 Non-functional testing comprises the behaviour aspect of the system, i.e., performance, stress, etc.  
 Performance testing, usability testing, and volume testing are all types of non-functional testing.  
 
