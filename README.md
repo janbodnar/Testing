@@ -90,6 +90,28 @@ One can perform smoke tests either manually or using an automated tool.
 Smoke testing originated in the hardware testing practice of turning on a new piece of hardware  
 for the first time and considering it a success if it does not catch fire and smoke. 
 
+## Codre review
+
+Code review (sometimes referred to as peer review) is a software quality assurance activity in  
+which one or several people check a program mainly by viewing and reading parts of its source code.  
+
+Goals 
+
+- Better code quality  – improve internal code quality and maintainability
+  (readability, uniformity, understandability, etc.)
+- Finding defects  – improve quality regarding external aspects, especially correctness,
+  but also find performance problems, security vulnerabilities, injected malware, ...
+- Learning/Knowledge transfer  – help in transferring knowledge about the codebase, solution approaches,
+  expectations regarding quality, etc.; both to the reviewers as well as to the author
+- Increase sense of mutual responsibility and solidarity
+- Finding better solutions  – generate ideas for new and better solutions 
+- Complying to QA guidelines, ISO/IEC standards  – Code reviews are mandatory in some contexts, e.g.,
+  air traffic software, safety-critical software
+
+
+
+
+
 
 
 
