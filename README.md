@@ -44,6 +44,12 @@ Unit Testing, integration testing, and end-to-end testing are all types of funct
 Non-functional testing comprises the behaviour aspect of the system, i.e., performance, stress, etc.  
 Performance testing, usability testing, and volume testing are all types of non-functional testing.  
 
+## Beta testing 
+
+Beta testing is the process of testing a software product or service in a real-world environment  
+before its official release. During beta testing, the software is made available to a selected 
+group of users who are willing to test the product and provide feedback to the developers.  
+
 
 ## Test case 
 
