@@ -50,6 +50,19 @@ on the software application in order to verify the expected functionality of the
     Pass/fail
     Remarks
 
+## Test suite 
+
+A test suite is a collection of test cases. In automated testing, it can mean a collection of test scripts.  
+In a test suite, the test cases / scripts are organized in a logical order.  
+
+Example of a test suite for purchasing a product, having 4 test cases:
+
+- Login
+- Add Products
+- Checkout
+- Logout
+
+
 
 ## Test coverage
 
@@ -90,7 +103,16 @@ One can perform smoke tests either manually or using an automated tool.
 Smoke testing originated in the hardware testing practice of turning on a new piece of hardware  
 for the first time and considering it a success if it does not catch fire and smoke. 
 
-## Codre review
+
+## User Acceptance Testing
+
+User Acceptance Testing (UAT) is a type of testing performed by the end user or the client  
+to verify/accept the software system before moving the software application to the production  
+environment. UAT is done in the final phase of testing after functional, integration  
+and system testing is done.
+
+
+## Code review
 
 Code review (sometimes referred to as peer review) is a software quality assurance activity in  
 which one or several people check a program mainly by viewing and reading parts of its source code.  
