@@ -431,7 +431,7 @@ if __name__ == '__main__':
     unittest.main()
 ```
 
-### Testing sorting algorithms
+## Testing sorting algorithms
 
 The `sorting_algos.py` file:  
 
