@@ -142,9 +142,10 @@ test/test_app.py::test_home_page PASSED           [100%]
 ---
 
 ### Notes
-- **No `__init__.py` Needed**: Since we’re using an absolute import and there’s only one test file, `test/__init__.py` isn’t required. Pytest will still discover `test_app.py` due to its naming convention.
-- **Simplicity**: This avoids database, forms, or external dependencies, focusing purely on the HTTP response.
-- **Byte Strings**: `response.data` is bytes, so assertions use `b"..."` to match the encoded HTML.
+- **No `__init__.py` Needed**: Since we’re using an absolute import and there’s only one test file, `test/__init__.py`  
+  isn’t required. Pytest will still discover `test_app.py` due to its naming convention.  
+- **Simplicity**: This avoids database, forms, or external dependencies, focusing purely on the HTTP response.  
+- **Byte Strings**: `response.data` is bytes, so assertions use `b"..."` to match the encoded HTML.  
 
 ---
 
@@ -156,8 +157,6 @@ python app.py
 ```
 
 Visit `http://127.0.0.1:5000/` to confirm the title and paragraph appear as expected.
-
----
 
 
 ## Testing JSON
