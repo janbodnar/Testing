@@ -64,7 +64,7 @@ python -m unittest <filename>.py -v
 
 ## Practical Examples of `unittest`
 
-Below are 15 practical examples (10 original + 5 new) showcasing `unittest` in  
+Below are 15 practical examples showcasing `unittest` in  
 various scenarios, from basic functions to advanced features.  
 
 ### Example 1: Testing a Simple Function
