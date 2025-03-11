@@ -431,6 +431,131 @@ if __name__ == '__main__':
     unittest.main()
 ```
 
+### Testing sorting algorithms
+
+The `sorting_algos.py` file:  
+
+```python
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if arr[j] > arr[j+1]:
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+
+def selection_sort(arr, ascending=True):
+    n = len(arr)
+    for i in range(n):
+        idx = i
+        for j in range(i + 1, n):
+            if (ascending and arr[j] < arr[idx]) or (not ascending and arr[j] > arr[idx]):
+                idx = j
+        arr[i], arr[idx] = arr[idx], arr[i]
+    return arr
+```
+
+The `test_algos.py` file:  
+
+```python
+import unittest
+from sorting_algos import bubble_sort, selection_sort
+
+
+class TestSortingAlgorithms(unittest.TestCase):
+    def setUp(self):
+        """Set up test fixtures with various input arrays."""
+        self.unsorted_list = [64, 34, 25, 12, 22, 11, 90]
+        self.sorted_asc_list = [11, 12, 22, 25, 34, 64, 90]
+        self.sorted_desc_list = [90, 64, 34, 25, 22, 12, 11]
+        self.empty_list = []
+        self.single_element_list = [42]
+        self.duplicates_list = [5, 2, 8, 5, 1, 9, 2]
+
+    def test_bubble_sort_unsorted(self):
+        """Test bubble_sort with an unsorted list."""
+        arr = self.unsorted_list.copy()  # Use copy to preserve original fixture
+        bubble_sort(arr)
+        self.assertEqual(arr, self.sorted_asc_list)
+
+    def test_bubble_sort_already_sorted(self):
+        """Test bubble_sort with an already sorted list."""
+        arr = self.sorted_asc_list.copy()
+        bubble_sort(arr)
+        self.assertEqual(arr, self.sorted_asc_list)
+
+    def test_bubble_sort_empty(self):
+        """Test bubble_sort with an empty list."""
+        arr = self.empty_list.copy()
+        bubble_sort(arr)
+        self.assertEqual(arr, self.empty_list)
+
+    def test_bubble_sort_single_element(self):
+        """Test bubble_sort with a single-element list."""
+        arr = self.single_element_list.copy()
+        bubble_sort(arr)
+        self.assertEqual(arr, self.single_element_list)
+
+    def test_bubble_sort_duplicates(self):
+        """Test bubble_sort with a list containing duplicates."""
+        arr = self.duplicates_list.copy()
+        bubble_sort(arr)
+        self.assertEqual(arr, [1, 2, 2, 5, 5, 8, 9])
+
+    def test_selection_sort_ascending_unsorted(self):
+        """Test selection_sort with an unsorted list in ascending order."""
+        arr = self.unsorted_list.copy()
+        result = selection_sort(arr, ascending=True)
+        self.assertEqual(result, self.sorted_asc_list)
+
+    def test_selection_sort_descending_unsorted(self):
+        """Test selection_sort with an unsorted list in descending order."""
+        arr = self.unsorted_list.copy()
+        result = selection_sort(arr, ascending=False)
+        self.assertEqual(result, self.sorted_desc_list)
+
+    def test_selection_sort_ascending_sorted(self):
+        """Test selection_sort with an already sorted list in ascending order."""
+        arr = self.sorted_asc_list.copy()
+        result = selection_sort(arr, ascending=True)
+        self.assertEqual(result, self.sorted_asc_list)
+
+    def test_selection_sort_descending_sorted(self):
+        """Test selection_sort with an already sorted list in descending order."""
+        arr = self.sorted_desc_list.copy()
+        result = selection_sort(arr, ascending=False)
+        self.assertEqual(result, self.sorted_desc_list)
+
+    def test_selection_sort_empty(self):
+        """Test selection_sort with an empty list."""
+        arr = self.empty_list.copy()
+        result = selection_sort(arr, ascending=True)
+        self.assertEqual(result, self.empty_list)
+
+    def test_selection_sort_single_element(self):
+        """Test selection_sort with a single-element list."""
+        arr = self.single_element_list.copy()
+        result = selection_sort(arr, ascending=True)
+        self.assertEqual(result, self.single_element_list)
+
+    def test_selection_sort_duplicates_ascending(self):
+        """Test selection_sort with duplicates in ascending order."""
+        arr = self.duplicates_list.copy()
+        result = selection_sort(arr, ascending=True)
+        self.assertEqual(result, [1, 2, 2, 5, 5, 8, 9])
+
+    def test_selection_sort_duplicates_descending(self):
+        """Test selection_sort with duplicates in descending order."""
+        arr = self.duplicates_list.copy()
+        result = selection_sort(arr, ascending=False)
+        self.assertEqual(result, [9, 8, 5, 5, 2, 2, 1])
+
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+
+
 ---
 
 ## Tips for Effective Unit Testing
