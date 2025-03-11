@@ -18,6 +18,7 @@ simple_app/
 ├── templates/
 │   └── home.html    # Home page template
 └── test/
+    ├── __init__.py  # Makes test/ a package (can be empty)
     └── test_app.py  # Test file
 ```
 
