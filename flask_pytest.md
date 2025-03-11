@@ -1,5 +1,9 @@
 # Pytest with Flask
 
+
+
+## Simple tests
+
 Below is a very simple Flask application with a home page, along with a corresponding `pytest` test  
 file that checks only the status code, title, and a paragraph. This example strips down the complexity  
 to focus on these three elements, making it easy to understand and adapt.
