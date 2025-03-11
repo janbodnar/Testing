@@ -45,6 +45,7 @@ if __name__ == '__main__':
 ---
 
 ### HTML Template (`templates/home.html`)
+
 A simple HTML page with a title and a paragraph:
 
 ```html
@@ -64,7 +65,9 @@ A simple HTML page with a title and a paragraph:
 ---
 
 ### Pytest Test File (`test/test_app.py`)
+
 This test file uses pytest to check:
+
 1. The HTTP status code (200 OK).
 2. The page title (`<title>Welcome to My App</title>`).
 3. A paragraph (`<p>This is a simple paragraph on the home page.</p>`).
@@ -157,10 +160,176 @@ Visit `http://127.0.0.1:5000/` to confirm the title and paragraph appear as expe
 ---
 
 
+## Testing JSON
 
+Below is a simple Flask application that serves JSON data on its home page, along with a `pytest`  
+test file to verify the status code, content type, and specific JSON data. This example focuses  
+on testing a JSON response instead of HTML.
 
+---
 
+### Directory Structure
+```
+json_app/
+├── app.py           # Flask app
+└── test/
+    ├── __init__.py  # Makes test/ a package (optional but included for consistency)
+    └── test_app.py  # Test file
+```
 
+Note: No `templates/` directory is needed since we’re returning JSON, not rendering HTML.
+
+---
+
+### Flask App (`app.py`)
+
+A minimal Flask app that returns JSON data:
+
+```python
+# json_app/app.py
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    data = {
+        "message": "Hello, World!",
+        "status": "success",
+        "value": 42
+    }
+    return jsonify(data)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+- **Route `/`**: Returns a JSON object with `message`, `status`, and `value` fields.
+
+---
+
+### Pytest Test File (`test/test_app.py`)
+
+This test file checks:
+
+1. The HTTP status code (200 OK).
+2. The `Content-Type` header (`application/json`).
+3. Specific values in the JSON response (`message`, `status`, `value`).
+
+```python
+# json_app/test/test_app.py
+import pytest
+import json
+from app import app as flask_app  # Absolute import from app.py
+
+@pytest.fixture
+def client():
+    """Set up a test client for the Flask app."""
+    flask_app.config['TESTING'] = True
+    with flask_app.test_client() as client:
+        yield client
+
+def test_home_page_json(client):
+    """Test the home page for status code, content type, and JSON data."""
+    response = client.get('/')
+    
+    # Check status code
+    assert response.status_code == 200
+    
+    # Check content type
+    assert response.content_type == 'application/json'
+    
+    # Parse JSON and check data
+    data = json.loads(response.data)
+    assert data["message"] == "Hello, World!"
+    assert data["status"] == "success"
+    assert data["value"] == 42
+```
+
+---
+
+### `__init__.py` in `test/`
+
+An empty file to mark `test/` as a package (optional with absolute imports, 
+but included per your preference):
+
+```
+json_app/test/__init__.py
+```
+
+---
+
+### Running the Tests
+
+1. **Navigate to the project root**:
+   ```bash
+   cd json_app
+   ```
+
+2. **Run pytest**:
+   ```bash
+   pytest test/test_app.py -v
+   ```
+
+---
+
+### Expected Output
+If everything is set up correctly, you’ll see:
+
+```
+collected 1 item
+
+test/test_app.py::test_home_page_json PASSED      [100%]
+
+=========== 1 passed in X.XXs ===========
+```
+
+---
+
+### Explanation
+
+- **Flask App**:
+  - Uses `jsonify` to return a JSON response with a dictionary containing `message`, `status`, and `value`.  
+  - Automatically sets the `Content-Type` header to `application/json`.  
+
+- **Test File**:
+  - **`client` Fixture**: Sets up a Flask test client in testing mode.  
+  - **`test_home_page_json`**:
+    - `response.status_code == 200`: Verifies the request succeeds.  
+    - `response.content_type == 'application/json'`: Confirms the response is JSON.  
+    - `json.loads(response.data)`: Parses the JSON bytes into a Python dictionary.  
+    - Assertions on `data`: Checks exact values for `message`, `status`, and `value`.  
+
+- **Imports**: Uses absolute `from app import ...` since `app.py` is in the root,  
+  and pytest adds `json_app/` to `sys.path` when run from there.
+
+- **`test/__init__.py`**: Included for consistency with your previous setup,  
+  though not required here with absolute imports and a single test file.
+
+---
+
+### Running the App (Optional)
+To see the JSON in a browser or tool like `curl`, run:
+
+```bash
+python app.py
+```
+
+Visit `http://127.0.0.1:5000/` or use:
+
+```bash
+curl http://127.0.0.1:5000/
+```
+
+You’ll see:
+
+```json
+{
+    "message": "Hello, World!",
+    "status": "success",
+    "value": 42
+}
+```
 
 
 
