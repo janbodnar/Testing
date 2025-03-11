@@ -1,5 +1,165 @@
 # Pytest with Flask
 
+Below is a very simple Flask application with a home page, along with a corresponding `pytest` test  
+file that checks only the status code, title, and a paragraph. This example strips down the complexity  
+to focus on these three elements, making it easy to understand and adapt.
+
+---
+
+### Directory Structure
+
+```
+simple_app/
+├── app.py           # Flask app
+├── templates/
+│   └── home.html    # Home page template
+└── test/
+    └── test_app.py  # Test file
+```
+
+---
+
+### Flask App (`app.py`)
+
+Here’s a minimal Flask app with a single route for the home page:
+
+```python
+# simple_app/app.py
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+---
+
+### HTML Template (`templates/home.html`)
+A simple HTML page with a title and a paragraph:
+
+```html
+<!-- simple_app/templates/home.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Welcome to My App</title>
+</head>
+<body>
+    <h1>Home Page</h1>
+    <p>This is a simple paragraph on the home page.</p>
+</body>
+</html>
+```
+
+---
+
+### Pytest Test File (`test/test_app.py`)
+This test file uses pytest to check:
+1. The HTTP status code (200 OK).
+2. The page title (`<title>Welcome to My App</title>`).
+3. A paragraph (`<p>This is a simple paragraph on the home page.</p>`).
+
+```python
+# simple_app/test/test_app.py
+import pytest
+from app import app as flask_app  # Absolute import from app.py
+
+@pytest.fixture
+def client():
+    """Set up a test client for the Flask app."""
+    flask_app.config['TESTING'] = True
+    with flask_app.test_client() as client:
+        yield client
+
+def test_home_page(client):
+    """Test the home page for status code, title, and paragraph."""
+    response = client.get('/')
+    
+    # Check status code
+    assert response.status_code == 200
+    
+    # Check title
+    assert b"<title>Welcome to My App</title>" in response.data
+    
+    # Check paragraph
+    assert b"<p>This is a simple paragraph on the home page.</p>" in response.data
+```
+
+---
+
+### Running the Tests
+
+1. **Navigate to the project root**:
+   ```bash
+   cd simple_app
+   ```
+
+2. **Run pytest**:
+   ```bash
+   pytest test/test_app.py -v
+   ```
+
+---
+
+### Expected Output
+If everything is set up correctly, you’ll see:
+
+```
+collected 1 item
+
+test/test_app.py::test_home_page PASSED           [100%]
+
+=========== 1 passed in X.XXs ===========
+```
+
+---
+
+### Explanation
+- **Flask App**: Defines a single route (`/`) that renders `home.html`.
+- **HTML Template**: Contains a basic title and paragraph for testing.
+- **Test File**:
+  - **`client` Fixture**: Sets up a Flask test client in testing mode.
+  - **`test_home_page`**: Makes a GET request to `/`, then asserts:
+    - `status_code == 200`: The page loads successfully.
+    - Title presence: Checks for the exact `<title>` tag in the response bytes.
+    - Paragraph presence: Checks for the exact `<p>` tag in the response bytes.
+- **Imports**: Uses an absolute import (`from app import app`) since `app.py` is in the root directory,
+   and pytest adds `simple_app/` to `sys.path` when run from there.
+
+---
+
+### Notes
+- **No `__init__.py` Needed**: Since we’re using an absolute import and there’s only one test file, `test/__init__.py` isn’t required. Pytest will still discover `test_app.py` due to its naming convention.
+- **Simplicity**: This avoids database, forms, or external dependencies, focusing purely on the HTTP response.
+- **Byte Strings**: `response.data` is bytes, so assertions use `b"..."` to match the encoded HTML.
+
+---
+
+### Running the App (Optional)
+To see the page in a browser, run:
+
+```bash
+python app.py
+```
+
+Visit `http://127.0.0.1:5000/` to confirm the title and paragraph appear as expected.
+
+---
+
+
+
+
+
+
+
+
+
+
 
 
 ## Testing a form 
