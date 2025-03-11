@@ -556,6 +556,8 @@ if __name__ == '__main__':
 
 ## Test poker rank hands
 
+Run with `python -m unittest test_rank_hands.py -v`
+
 
 The `rank_hands.py` file:  
 
