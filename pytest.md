@@ -19,21 +19,21 @@ This installs the `pytest` library.
 
 ## pytest test discovery conventions
 
-If no arguments are specified then test files are searched in locations from
-`testpaths` (if configured) or the current directory.
-Alternatively, command line arguments can be used in any combination of
-directories, file names or node ids.
+If no arguments are specified then test files are searched in locations from  
+`testpaths` (if configured) or the current directory.  
+Alternatively, command line arguments can be used in any combination of  
+directories, file names or node ids.  
 
-In the selected directories, pytest looks for `test_*.py`
-or `*_test.py` files. In the selected files, pytest looks for
-test prefixed test functions outside of class and test prefixed test methods
-inside Test prefixed test classes (without an `__init__` method).
+In the selected directories, pytest looks for `test_*.py`  
+or `*_test.py` files. In the selected files, pytest looks for  
+test prefixed test functions outside of class and test prefixed test methods  
+inside Test prefixed test classes (without an `__init__` method).  
 
 ## Running pytest
 
-With no arguments, pytest looks at the current working directory (or some other
-preconfigured directory) and all subdirectories for test files and runs the test
-code it finds.
+With no arguments, pytest looks at the current working directory (or some other  
+preconfigured directory) and all subdirectories for test files and runs the test  
+code it finds.  
 
 ```
 $ pytest
@@ -48,41 +48,35 @@ $ pytest min_max_test.py
 We can run a specific test file by giving its name as an argument.
 
 ```
-
 $ pytest min_max_test.py::test_min
-
 ```
 
 A specific function can be run by providing its name after the `::`
 characters.
 
 ```
-
 $ pytest -m smoke
-
 ```
 
 Markers can be used to group tests. A marked grouped of tests is then
 run with `pytest -m`.
 
 ```
-
 $ pytest -k <expression>
-
 ```
 
-In addition, we can use expressions to run tests that match names of test
-functions and classes.
+In addition, we can use expressions to run tests that match names of test  
+functions and classes.  
+
 
 ## Python pytest simple example
 
 In the first example, we are going to test two simple math algorithms with
 pytest.
 
-algo.py
+The `algo.py` file:  
 
-```
-
+```python
 def max(values):
 
   _max = values[0]
@@ -102,16 +96,15 @@ def min(values):
           _min = val
 
   return _min
-
 ```
 
 We have a module with custom `max` and `min`
 functions.
 
-min\_max\_test.py
 
-```
+The `min_max_test.py` file:  
 
+```python
 #!/usr/bin/python
 
 import algo
@@ -127,27 +120,23 @@ def test_max():
 
     val = algo.max(values)
     assert val == 6
-
 ```
 
 The testing file `min_max_test.py` has a test
 word in its name.
 
-```
-
+```python
 def test_min():
   values = (2, 3, 1, 4, 6)
 
   val = algo.min(values)
   assert val == 1
-
 ```
 
-Also, the testing function `test_min` has a test word.
-We use the `assert` keyword to test the value of the algorithm.
+Also, the testing function `test_min` has a test word. We use the `assert`
+keyword to test the value of the algorithm.
 
 ```
-
 $ pytest min_max_test.py
 ================================================= test session starts =================================================
 platform win32 -- Python 3.7.0, pytest-5.0.1, py-1.8.0, pluggy-0.12.0
@@ -157,22 +146,20 @@ collected 2 items
 min_max_test.py ..                                                                                               [100%]
 
 ============================================== 2 passed in 0.03 seconds ===============================================
-
 ```
 
-This is the output. There were two tests and both have successfully passed.
-A more verbose output is shown with `pytest -v min_max_test.py`.
+This is the output. There were two tests and both have successfully passed.  
+A more verbose output is shown with `pytest -v min_max_test.py`.  
 
 ## Pytest skip
 
-With the skip decorator, we can skip the specified tests. There are multiple reasons
-for skipping test; for instance, a database/online service is not available at
-the moment or we skip Linux specific tests on Windows.
+With the skip decorator, we can skip the specified tests. There are multiple reasons  
+for skipping test; for instance, a database/online service is not available at  
+the moment or we skip Linux specific tests on Windows.  
 
-skipping.py
+The `skipping.py` file:  
 
-```
-
+```python
 #!/usr/bin/python
 
 import algo
@@ -195,8 +182,8 @@ def test_max():
 
 In the example, the `test_min` is skipped.
 
-```
 
+```
 $ pytest min_max_test.py
 ================================================= test session starts =================================================
 platform win32 -- Python 3.7.0, pytest-5.0.1, py-1.8.0, pluggy-0.12.0
@@ -206,19 +193,18 @@ collected 2 items
 min_max_test.py s.                                                                                               [100%]
 
 ========================================= 1 passed, 1 skipped in 0.04 seconds =========================================
-
 ```
 
-In the output following the test file name, s stands for skipped and . for passed.
+In the output following the test file name, s stands for skipped and . for passed.  
+
 
 ## Pytest marking
 
 We can use markers to organize tests into units.
 
-marking.py
+The `marking.py` file:  
 
-```
-
+```python
 #!/usr/bin/python
 
 # pytest -m a marking.py
@@ -250,12 +236,12 @@ def test_b1():
 def test_b2():
 
     assert "falcon" == f"fal{'con'}"
-
 ```
 
 We have two groups of test identified by markers, a and b.
 These units are run by `pytest -m a marking.py`
 and `pytest -m b marking.py`.
+
 
 ## Pytest parameterized tests
 
@@ -263,10 +249,9 @@ With parameterized tests, we can add multiple values to
 our assertions. We use the `@pytest.mark.parametrize`
 marker.
 
-parameterized.py
+The `parameterized.py` file:  
 
-```
-
+```python
 #!/usr/bin/python
 
 import algo
@@ -290,15 +275,13 @@ def test_max(data, expected):
 
 In the example, we test the two functions with multiple input data.
 
-```
-
+```python
 @pytest.mark.parametrize("data, expected", [((2, 3, 1, 4, 6), 1),
     ((5, -2, 0, 9, 12), -2), ((200, 100, 0, 300, 400), 0)])
 def test_min(data, expected):
 
     val = algo.min(data)
     assert val == expected
-
 ```
 
 We pass two values to the test function: the data and the exptected
@@ -306,7 +289,6 @@ value. In our case, we test the `min` function with
 three data tuples.
 
 ```
-
 $ pytest parameterized.py
 ================================================= test session starts =================================================
 platform win32 -- Python 3.7.0, pytest-5.0.1, py-1.8.0, pluggy-0.12.0
@@ -316,20 +298,19 @@ collected 6 items
 parametrized.py ......                                                                                           [100%]
 
 ============================================== 6 passed in 0.03 seconds ===============================================
-
 ```
 
 Pytest output informs that there were six runs.
+
 
 ## Pytest fixtures
 
 Tests need to run against the background of a known set of objects. This set
 of objects is called a *test fixture*.
 
-algo.py
+The `algo.py` file:  
 
-```
-
+```python
 def sel_sort(data):
 
   if not isinstance(data, list):
@@ -355,10 +336,9 @@ def sel_sort(data):
 For this example, we add a selection sort algorithm to the `algo.py`
 module.
 
-fixtures.py
+The `fixtures.py` file: 
 
-```
-
+```python
 #!/usr/bin/python
 
 import algo
@@ -378,32 +358,27 @@ def test_sel_sort(data):
 
 We test the selection sort with a fixture.
 
-```
-
+```python
 @pytest.fixture
 def data():
 
     return [3, 2, 1, 5, -3, 2, 0, -2, 11, 9]
-
 ```
 
 Our test fixture simply returns some test data. Note that
 we refer to this fixture by its name: `data`.
 
-```
-
+```python
 def test_sel_sort(data):
 
   sorted_vals = algo.sel_sort(data)
   assert sorted_vals == sorted(data)
-
 ```
 
 In the `test_sel_sort` function, we pass the data
 fixture as a function argument.
 
 ```
-
 $ pytest fixtures.py
 ================================================= test session starts =================================================
 platform win32 -- Python 3.7.0, pytest-5.0.1, py-1.8.0, pluggy-0.12.0
@@ -413,8 +388,8 @@ collected 1 item
 fixtures.py .                                                                                                    [100%]
 
 ============================================== 1 passed in 0.02 seconds ===============================================
-
 ```
+
 ## Pytest layouts
 
 Python tests can be organized in various ways. Tests can be integrated in the
@@ -425,7 +400,6 @@ Python package or they can rest outside the package.
 Next we show how to run tests within a Python package.
 
 ```
-
 setup.py
 utils
 │   algo.py
@@ -436,30 +410,26 @@ utils
         algo_test.py
         srel_test.py
         __init__.py
-
 ```
 
 We have this package layout. The tests are located in the `tests`
 subdirectory withing the package.
 
-setup.py
+The `setup.py` file:  
 
-```
-
+```python
 #!/usr/bin/python
 
 from setuptools import setup, find_packages
 
 setup(name="utils", packages=find_packages())
-
 ```
 
 This is the `setup.py`.
 
-utils/algo.py
+The `utils/algo.py` file: 
 
-```
-
+```python
 def sel_sort(data):
 
     if not isinstance(data, list):
@@ -498,28 +468,24 @@ def min(values):
             _min = val
 
     return _min
-
 ```
 
 This is the `algo.py` file.
 
-utils/srel.py
+The `utils/srel.py` file:  
 
-```
-
+```python
 def is_palindrome(val):
 
     return val == val[::-1]
-
 ```
 
 We have another module, which contains a function to
 test whether a word is a palindrome.
 
-tests/algo\_test.py
+The `tests/algo_test.py` file:  
 
-```
-
+```python
 #!/usr/bin/python
 
 import utils.algo
@@ -552,10 +518,9 @@ def test_max():
 These are the tests for the `utils.algo` module. Notice
 that we use full module names.
 
-tests/srel\_test.py
+the `tests/srel_test.py` file:  
 
-```
-
+```python
 #!/usr/bin/python
 
 import utils.srel
@@ -567,22 +532,18 @@ def test_palindrome(word, expected):
 
     val = utils.srel.is_palindrome(word)
     assert val == expected
-
 ```
 
 This is a test for the `is_palindrome` function.
 
-utils/\_\_init\_\_.py
-
+utils/__init__.py
 ```
 
 ```
-utils/tests/\_\_init\_\_.py
-
+utils/tests/__init__.py
 ```
 
 ```
-
 Both `__init__.py` files are empty.
 
 ```
@@ -608,7 +569,6 @@ The next example shows an application source layout where the tests
 are not integrated inside the package.
 
 ```
-
 setup.py
 src
 └───utils
@@ -617,7 +577,6 @@ src
 tests
     algo_test.py
     srel_test.py
-
 ```
 
 In this layout, we have tests outside the source tree.
@@ -633,5 +592,4 @@ We set the `PYTHONPATH` and run pytest.
 ## Source
 
 [Python pytest documentation](https://docs.pytest.org/en/8.0.x/)
-
 
