@@ -36,17 +36,13 @@ preconfigured directory) and all subdirectories for test files and runs the test
 code it finds.
 
 ```
-
 $ pytest
-
 ```
 
 Running all test files in the current directory.
 
 ```
-
 $ pytest min_max_test.py
-
 ```
 
 We can run a specific test file by giving its name as an argument.
