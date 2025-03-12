@@ -143,3 +143,44 @@ class WebCodeTest(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 ```
+
+## Pytest example
+
+```python
+import pytest
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+
+@pytest.fixture
+def driver():
+    opts = Options()
+    opts.add_argument("--headless")
+    driver = webdriver.Chrome(options=opts)
+    yield driver
+    driver.quit()
+
+class TestWebCode:
+    def test_title(self, driver):
+        driver.get("https://webcode.me")
+        print(driver.title)
+        assert "My html page" in driver.title
+
+    def test_paragraphs(self, driver):
+        driver.get("https://webcode.me")
+        els = driver.find_elements(By.TAG_NAME, "p")
+        assert 'Today is a beautiful day' in els[0].text
+        assert 'Hello there' in els[1].text
+
+if __name__ == "__main__":
+
+    import sys
+    sys.exit(pytest.main())
+```
+
+
+
+
+
+
+
