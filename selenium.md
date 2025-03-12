@@ -8,6 +8,8 @@ Choose the driver that matches the version of your chrome.
 
 `https://googlechromelabs.github.io/chrome-for-testing/#stable`
 
+Download the driver and place it into a directory that is located in the system environment `PATH`.
+
 
 ## Headless mode
 
