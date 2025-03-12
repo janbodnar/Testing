@@ -1,6 +1,14 @@
 # Selenium
 
 
+
+## Get the driver 
+
+Choose the driver that matches the version of your chrome.  
+
+`https://googlechromelabs.github.io/chrome-for-testing/#stable`
+
+
 ## Headless mode
 
 ```python
