@@ -71,6 +71,37 @@ finally:
     driver.quit()
 ```
 
+## Page source
+
+```python
+from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
+
+try:
+
+    opts = Options()
+    opts.add_argument("--headless")
+
+
+    driver = Chrome(options=opts)
+
+    driver.get('https://webcode.me')
+    title = driver.title
+    content = driver.page_source
+
+    print(content)
+
+    assert title == 'My html page', 'title check failed'
+    print('passed title check')
+
+    assert 'Today is a beautiful day' in content, 'paragraph content check failed'
+    print('passed paragraph content check')
+
+finally:
+
+    driver.quit()
+```
+
 
 ## Unittest example
 
