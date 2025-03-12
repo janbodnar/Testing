@@ -179,6 +179,192 @@ if __name__ == "__main__":
 ```
 
 
+## Flask/Selenium example
+
+An example with a button that when clicked redirects to another page.  
+
+---
+
+### Directory Structure
+
+Here’s the complete structure:
+
+```
+flask_project/
+├── app.py
+├── templates/
+│   ├── index.html
+│   └── newpage.html
+└── tests/
+    └── test_app.py
+```
+
+- `flask_project/`: Root directory.
+- `app.py`: Flask application file in the root.
+- `templates/`: Folder for HTML templates, relative to `app.py`.
+- `tests/`: Subdirectory for test files, containing `test_app.py`.
+
+---
+
+### Flask App Files
+
+#### `app.py`
+This remains unchanged from the previous example, defining the Flask app with two routes:  
+
+```python
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/newpage')
+def newpage():
+    return render_template('newpage.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+#### `templates/index.html`
+The home page with a button to navigate:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+    <h1>Welcome to the Home Page</h1>
+    <button id="navigateButton" onclick="window.location.href='/newpage'">Go to New Page</button>
+</body>
+</html>
+```
+
+#### `templates/newpage.html`
+The target page after button click:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Page</title>
+</head>
+<body>
+    <h1>This is the New Page</h1>
+    <p>You have successfully navigated here!</p>
+</body>
+</html>
+```
+
+---
+
+### Test File
+
+#### `tests/test_app.py`
+
+This is the updated test file, adjusted for the `tests` directory and compatible 
+with `python -m unittest discover -s tests`:
+
+```python
+import unittest
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+import threading
+import time
+import sys
+import os
+
+# Adjust sys.path to import app from the root directory
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from app import app
+
+class FlaskSeleniumTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        # Set up headless Chrome
+        opts = Options()
+        opts.add_argument("--headless")
+        cls.driver = webdriver.Chrome(options=opts)
+        
+        # Start Flask app in a separate thread
+        cls.server_thread = threading.Thread(target=app.run, kwargs={'debug': False})
+        cls.server_thread.daemon = True  # Stops when main thread exits
+        cls.server_thread.start()
+        
+        # Give the server time to start
+        time.sleep(2)
+
+    def setUp(self):
+        # Navigate to the home page before each test
+        self.driver.get("http://127.0.0.1:5000/")
+
+    def test_button_navigation(self):
+        # Find and click the button
+        button = self.driver.find_element(By.ID, "navigateButton")
+        button.click()
+        
+        # Wait for navigation to complete
+        time.sleep(1)
+        
+        # Verify the new page
+        self.assertEqual(self.driver.current_url, "http://127.0.0.1:5000/newpage")
+        self.assertIn("This is the New Page", self.driver.page_source)
+
+    @classmethod
+    def tearDownClass(cls):
+        # Clean up
+        cls.driver.quit()
+
+if __name__ == "__main__":
+    unittest.main()
+```
+
+---
+
+### Running the Example
+
+#### Prerequisites
+- Install dependencies: `pip install flask selenium`.
+- Ensure ChromeDriver is installed and in your PATH (or specify its path in `webdriver.Chrome()`).
+
+#### Steps
+1. **Set Up the Directory**:
+   - Create `flask_project/` with the structure above.
+   - Place `app.py` in the root.
+   - Create `templates/` with `index.html` and `newpage.html`.
+   - Create `tests/` with `test_app.py`.
+
+2. **Run the Tests**:
+   - From the `flask_project/` directory:
+     ```bash
+     python -m unittest discover -s tests
+     ```
+   - Output should look like:
+     ```
+     ....
+     ----------------------------------------------------------------------
+     Ran 1 test in 3.123s
+
+     OK
+     ```
+
+3. **Run the App Separately (Optional)**:
+   - To test manually: `python app.py`, then visit `http://127.0.0.1:5000/`.
+
+
+
+
+
+
+
 
 
 
