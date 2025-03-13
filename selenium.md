@@ -361,19 +361,16 @@ if __name__ == "__main__":
 
 
 
-## Pagination
 
-Below is an updated tutorial that adheres to the recommended structure for a Flask  
-application. This involves organizing the code into a proper package structure with  
-separate modules for the application factory, database handling, routes, and tests.  
-I’ll also maintain the pagination functionality, the `populate-db` command, and the  
-updated Selenium tests.
+# Flask Application with Pagination and Selenium Tests
+
+This tutorial demonstrates how to build a Flask application with pagination using SQLite,  
+populate it with 100 rows of sample data, and test the pagination functionality with Selenium.  
+The application follows Flask's recommended structure using the application factory pattern.
 
 ---
 
 ### Project Structure
-
-Here’s the recommended structure for the Flask app:
 
 ```
 flask_pagination/
@@ -391,10 +388,12 @@ flask_pagination/
 └── requirements.txt
 ```
 
+---
+
 ### Step 1: Set Up the Flask Application
 
 #### `run.py` (Entry Point)
-This file serves as the entry point to run the application.
+This file runs the Flask application using the application factory.
 
 ```python
 # run.py
@@ -406,7 +405,8 @@ if __name__ == '__main__':
 ```
 
 #### `flask_pagination/__init__.py` (Application Factory)
-This file defines the application factory pattern, which is the recommended way to initialize a Flask app.
+
+This defines the Flask app factory, configuring the instance folder and registering blueprints and database commands.
 
 ```python
 # flask_pagination/__init__.py
@@ -445,7 +445,7 @@ def create_app(test_config=None):
 
 #### `flask_pagination/db.py` (Database Handling)
 
-This module handles database initialization and population.
+This module manages the SQLite database connection, initialization, and population.
 
 ```python
 # flask_pagination/db.py
@@ -498,7 +498,8 @@ def populate_db_command():
 ```
 
 #### `flask_pagination/routes.py` (Routes)
-This module defines the routes using a Blueprint.
+
+This module defines the pagination logic and route using a Blueprint.
 
 ```python
 # flask_pagination/routes.py
@@ -530,7 +531,7 @@ def index():
 ```
 
 #### `flask_pagination/templates/index.html` (Template)
-The template remains unchanged:
+This HTML template displays the paginated table.
 
 ```html
 <!-- flask_pagination/templates/index.html -->
@@ -585,10 +586,13 @@ The template remains unchanged:
 </html>
 ```
 
+---
+
 ### Step 2: Selenium Unit Tests
 
 #### `tests/test_app.py`
-The tests are updated to work with the new structure:
+
+This file contains Selenium tests to verify pagination functionality.
 
 ```python
 # tests/test_app.py
@@ -598,15 +602,19 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+import os
 from flask_pagination import create_app
 
 class TestPagination(unittest.TestCase):
     def setUp(self):
-        # Set up Flask app with test configuration
-        self.app = create_app({'TESTING': True})
+        # Set up Flask app with test configuration including DATABASE
+        self.app = create_app({
+            'TESTING': True,
+            'DATABASE': os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'instance', 'test_example.db')
+        })
         self.client = self.app.test_client()
         
-        # Initialize and populate database
+        # Initialize and populate database within app context
         with self.app.app_context():
             from flask_pagination.db import init_db, populate_db
             init_db()
@@ -626,61 +634,48 @@ class TestPagination(unittest.TestCase):
 
     def tearDown(self):
         self.driver.quit()
+        # Clean up test database
+        with self.app.app_context():
+            db_path = self.app.config['DATABASE']
+            if os.path.exists(db_path):
+                os.remove(db_path)
 
     def test_initial_page_load(self):
-        # Test that first page loads with 10 items
-        rows = self.driver.find_elements(By.XPATH, '//table//tr[td]')  # Only data rows
+        rows = self.driver.find_elements(By.XPATH, '//table//tr[td]')
         self.assertEqual(len(rows), 10)
-        
-        # Check first and last item on page 1
         first_item = self.driver.find_element(By.XPATH, '//table//tr[td][1]/td[2]').text
         last_item = self.driver.find_element(By.XPATH, '//table//tr[td][10]/td[2]').text
         self.assertEqual(first_item, 'Item 1')
         self.assertEqual(last_item, 'Item 10')
 
     def test_pagination_next(self):
-        # Click next page
         next_button = self.driver.find_element(By.LINK_TEXT, 'Next »')
         next_button.click()
         time.sleep(1)
-        
-        # Test second page has 10 items
-        rows = self.driver.find_elements(By.XPATH, '//table//tr[td]')  # Only data rows
+        rows = self.driver.find_elements(By.XPATH, '//table//tr[td]')
         self.assertEqual(len(rows), 10)
-        
-        # Check first and last item on page 2
         first_item = self.driver.find_element(By.XPATH, '//table//tr[td][1]/td[2]').text
         last_item = self.driver.find_element(By.XPATH, '//table//tr[td][10]/td[2]').text
         self.assertEqual(first_item, 'Item 11')
         self.assertEqual(last_item, 'Item 20')
 
     def test_pagination_specific_page(self):
-        # Click page 5
         page_5 = self.driver.find_element(By.LINK_TEXT, '5')
         page_5.click()
         time.sleep(1)
-        
-        # Test page 5 has 10 items
-        rows = self.driver.find_elements(By.XPATH, '//table//tr[td]')  # Only data rows
+        rows = self.driver.find_elements(By.XPATH, '//table//tr[td]')
         self.assertEqual(len(rows), 10)
-        
-        # Check first and last item on page 5
         first_item = self.driver.find_element(By.XPATH, '//table//tr[td][1]/td[2]').text
         last_item = self.driver.find_element(By.XPATH, '//table//tr[td][10]/td[2]').text
         self.assertEqual(first_item, 'Item 41')
         self.assertEqual(last_item, 'Item 50')
 
     def test_last_page(self):
-        # Go to last page (page 10)
         page_10 = self.driver.find_element(By.LINK_TEXT, '10')
         page_10.click()
         time.sleep(1)
-        
-        # Test last page has 10 items
-        rows = self.driver.find_elements(By.XPATH, '//table//tr[td]')  # Only data rows
+        rows = self.driver.find_elements(By.XPATH, '//table//tr[td]')
         self.assertEqual(len(rows), 10)
-        
-        # Check first and last item on page 10
         first_item = self.driver.find_element(By.XPATH, '//table//tr[td][1]/td[2]').text
         last_item = self.driver.find_element(By.XPATH, '//table//tr[td][10]/td[2]').text
         self.assertEqual(first_item, 'Item 91')
@@ -690,9 +685,11 @@ if __name__ == '__main__':
     unittest.main()
 ```
 
+---
+
 ### Step 3: Requirements
 
-Create a `requirements.txt` file:
+Create `requirements.txt`:
 
 ```
 # requirements.txt
@@ -703,60 +700,88 @@ webdriver-manager
 click
 ```
 
-Install the dependencies:
+Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
+---
+
 ### How It Works
 
-1. **Application Structure:**
-   - **`run.py`**: Entry point to run the app using the application factory.
-   - **`__init__.py`**: Defines `create_app()` to initialize the Flask app, configure the database path, and register blueprints and commands.
-   - **`db.py`**: Manages database connections, initialization, and population using Flask’s app context and CLI commands.
-   - **`routes.py`**: Defines routes in a Blueprint for modularity.
-   - **`templates/index.html`**: Renders the paginated table.
+1. **Flask Application:**
+   - Uses the application factory pattern (`create_app`) for scalability.
+   - Stores the SQLite database in the `instance/` folder.
+   - Implements pagination with 10 items per page from a 100-row dataset.
+   - Provides CLI commands (`init-db` and `populate-db`) to manage the database.
 
-2. **Database Commands:**
-   - `flask init-db`: Creates the database structure.
-   - `flask populate-db`: Populates the database with 100 items.
+2. **Database:**
+   - `init_db`: Creates a table `items` with `id` and `name` columns.
+   - `populate_db`: Inserts 100 rows (`Item 1` to `Item 100`).
 
 3. **Selenium Tests:**
-   - Initializes the app and database within the test setup.
-   - Verifies pagination functionality using corrected XPath (`//table//tr[td]`) to count only data rows.
+   - `setUp`: Creates a test app with a temporary database, populates it, and starts the server.
+   - Tests verify pagination (10 rows per page) across the initial page, next page, page 5, and the last page (10).
+   - `tearDown`: Cleans up the test database.
+
+---
 
 ### Running the Application
 
-1. **Set Up the Database:**
-   - Initialize the database:
+1. **Set the `FLASK_APP` Environment Variable:**
+   - **Windows (Command Prompt):**
      ```bash
-     flask init-db
+     set FLASK_APP=flask_pagination
      ```
-   - Populate the database:
+   - **Unix/Linux/macOS:**
      ```bash
-     flask populate-db
+     export FLASK_APP=flask_pagination
+     ```
+   - **Windows (PowerShell):**
+     ```powershell
+     $env:FLASK_APP = "flask_pagination"
      ```
 
-2. **Run the Application:**
-   - Start the Flask server:
-     ```bash
-     python run.py
-     ```
-   - Visit `http://localhost:5000` to see the paginated table.
+2. **Initialize the Database:**
+   ```bash
+   flask init-db
+   ```
+   Output: `Initialized the database.`
 
-3. **Run the Tests:**
-   - Execute the tests:
-     ```bash
-     python tests/test_app.py
+3. **Populate the Database:**
+   ```bash
+   flask populate-db
+   ```
+   Output: `Database populated with 100 items.`
+
+4. **Run the Application:**
+   ```bash
+   python run.py
+   ```
+   - Visit `http://localhost:5000` to see the paginated table with 10 items per page.
+
+5. **Run the Tests:**
+   ```bash
+   python -m tests.test_app
+   ```
+   - Expected output:
      ```
+     ....
+     ----------------------------------------------------------------------
+     Ran 4 tests in X.XXXs
+     OK
+     ```
+   - The tests create a temporary database (`instance/test_example.db`), run the checks, and clean up afterward.
+
+---
 
 ### Notes
-- The app uses the Flask application factory pattern, which is scalable and recommended for larger projects.
-- The database is stored in the `instance/` folder, keeping it separate from the source code.
-- Blueprints in `routes.py` allow for modular route definitions.
-- Tests are placed in a `tests/` folder, following Python’s testing conventions.
+- The application uses Flask’s recommended structure with blueprints and an instance folder.
+- The database path is configurable via `app.config['DATABASE']`, set to `instance/example.db` by default and `instance/test_example.db` for tests.
+- Selenium tests use XPath (`//table//tr[td]`) to correctly count only data rows, excluding the header.
+- The `FLASK_APP` variable must be set for CLI commands to work with the factory pattern.
 
-This structure adheres to Flask’s best practices and should work reliably with the updated tests. 
+
 
 
 
