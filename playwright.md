@@ -283,3 +283,89 @@ Windows
 [Python Playwright documentation](https://playwright.dev/python/docs/intro)
 
 
+## SHMU
+
+
+```python
+#!/usr/bin/python
+import time
+from playwright.sync_api import sync_playwright
+
+with sync_playwright() as playwright:
+    webkit = playwright.webkit
+    browser = webkit.launch(headless=False)
+    page = browser.new_page()
+
+    url = 'https://www.shmu.sk/sk/?page=1'
+    page.goto(url)
+
+    # Wait for the page to load
+    page.wait_for_load_state('load')
+
+    # Locate the div with id="first-level"
+    div = page.locator('#first-level')
+
+    # Narrow down to the li with class="hydro" inside that div
+    li = div.locator('li.hydro')
+
+    # Find the link (<a>) inside the li using get_by_role
+    link = li.get_by_role("link")
+
+    # Click the link
+    link.click()
+
+    # Wait for the page to load after clicking
+    page.wait_for_load_state('load')
+
+    # Take a screenshot of the entire page
+    page.screenshot(path="screenshot.png")
+
+    # Optionally, take a screenshot of just the link element
+    # link.screenshot(path="link_screenshot.png")
+
+    html_content = page.content()
+    print(html_content)
+
+    time.sleep(1)
+    browser.close()
+
+
+
+
+
+
+
+
+# #!/usr/bin/python
+
+# import time
+# from playwright.sync_api import sync_playwright
+# import time
+
+
+# with sync_playwright() as playwright:
+
+#     webkit = playwright.webkit
+#     browser = webkit.launch(headless=False)
+#     page = browser.new_page()
+
+#     url = 'https://www.shmu.sk/sk/?page=1'
+#     page.goto(url)
+
+#     time.sleep(2)
+
+#     btn = page.get_by_role("hydro", name="Hydrologické spravodajstvo").check()
+#     btn.wait_for()  # Ensure the button is visible and ready
+#     btn.click()  # Click the button
+
+#         # Step 3: Wait for navigation or content to load
+#     page.wait_for_load_state('load')  # Wait for the page to load completely
+
+#     html_content = page.content()  # Get the full HTML content of the page
+#     print(html_content)
+
+
+#     time.sleep(1)
+
+#     browser.close()
+```
