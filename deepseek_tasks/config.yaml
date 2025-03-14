@@ -1,0 +1,130 @@
+chat_completions:
+  
+  - messages:
+      - role: "user"
+        content: | 
+          Write a Julia tutorial covering the variables. Write 10 examples. In
+          paragraphs, try to limit the sentences to 80 chars. Provide basic
+          definitions at the start of the tutorial. Encode < > & chars inside 
+          code or pre tags. Output in HTML.
+    temperature: 0.7
+    top_p: 0.9
+    model: "deepseek-chat"
+    max_completion_tokens: 90000
+    path: "data/julia/variables/index.html"
+    title: Julia Variables
+  
+  - messages:
+      - role: "user"
+        content: | 
+          Write a Julia tutorial covering the functions. Write 10 examples. In
+          paragraphs, try to limit the sentences to 80 chars. Provide basic
+          definitions at the start of the tutorial. Encode < > & chars inside 
+          code or pre tags. Output in HTML.
+    temperature: 0.7
+    top_p: 0.9
+    model: "deepseek-chat"
+    max_completion_tokens: 90000
+    path: "data/julia/functions/index.html"
+    title: Julia Functions
+  
+  - messages:
+      - role: "user"
+        content: | 
+          Write a Julia tutorial covering the arrays. Write 10 examples. In
+          paragraphs, try to limit the sentences to 80 chars. Provide basic
+          definitions at the start of the tutorial. Encode < > & chars inside 
+          code or pre tags. Output in HTML.
+    temperature: 0.7
+    top_p: 0.9
+    model: "deepseek-chat"
+    max_completion_tokens: 90000
+    path: "data/julia/arrays/index.html"
+    title: Julia Arrays
+  
+  - messages:
+      - role: "user"
+        content: | 
+          Write a Julia tutorial covering the sets. Write 10 examples. In
+          paragraphs, try to limit the sentences to 80 chars. Provide basic
+          definitions at the start of the tutorial. Encode < > & chars inside 
+          code or pre tags. Output in HTML.
+    temperature: 0.7
+    top_p: 0.9
+    model: "deepseek-chat"
+    max_completion_tokens: 90000
+    path: "data/julia/sets/index.html"
+    title: Julia Sets
+  
+  - messages:
+      - role: "user"
+        content: | 
+          Write a Julia tutorial covering the tuples. Write 10 examples. In
+          paragraphs, try to limit the sentences to 80 chars. Provide basic
+          definitions at the start of the tutorial. Encode < > & chars inside 
+          code or pre tags. Output in HTML.
+    temperature: 0.7
+    top_p: 0.9
+    model: "deepseek-chat"
+    max_completion_tokens: 90000
+    path: "data/julia/tuples/index.html"
+    title: Julia Tuples
+  
+  - messages:
+      - role: "user"
+        content: | 
+          Write a Julia tutorial covering the dataframes. Write 10 examples. In
+          paragraphs, try to limit the sentences to 80 chars. Provide basic
+          definitions at the start of the tutorial. Encode < > & chars inside 
+          code or pre tags. Output in HTML.
+    temperature: 0.7
+    top_p: 0.9
+    model: "deepseek-chat"
+    max_completion_tokens: 90000
+    path: "data/julia/dataframes/index.html"
+    title: Julia Dataframes
+  
+  - messages:
+      - role: "user"
+        content: | 
+          Write a Julia tutorial covering the operators. Write 10 examples. In
+          paragraphs, try to limit the sentences to 80 chars. Provide basic
+          definitions at the start of the tutorial. Encode < > & chars inside 
+          code or pre tags. Output in HTML.
+    temperature: 0.7
+    top_p: 0.9
+    model: "deepseek-chat"
+    max_completion_tokens: 90000
+    path: "data/julia/operators/index.html"
+    title: Julia Operators
+  
+  - messages:
+      - role: "user"
+        content: | 
+          Write a Julia tutorial covering the modules. Write 10 examples. In
+          paragraphs, try to limit the sentences to 80 chars. Provide basic
+          definitions at the start of the tutorial. Encode < > & chars inside 
+          code or pre tags. Output in HTML.
+    temperature: 0.7
+    top_p: 0.9
+    model: "deepseek-chat"
+    max_completion_tokens: 90000
+    path: "data/julia/modules/index.html"
+    title: Julia Modules
+  
+  
+  - messages:
+      - role: "user"
+        content: | 
+          Write a Julia tutorial covering the interfaces. Write 10 examples. In
+          paragraphs, try to limit the sentences to 80 chars. Provide basic
+          definitions at the start of the tutorial. Encode < > & chars inside 
+          code or pre tags. Output in HTML.
+    temperature: 0.7
+    top_p: 0.9
+    model: "deepseek-chat"
+    max_completion_tokens: 90000
+    path: "data/julia/interfaces/index.html"
+    title: Julia Interfaces
+  
+
