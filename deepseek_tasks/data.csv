@@ -1,0 +1,21 @@
+id,first_name,last_name,city,date_of_birth
+1,Alice,Smith,New York,1995-08-22
+2,Bob,Johnson,Los Angeles,12/03/1987
+3,Charlie,Brown,Chicago,09-15-1990
+4,Diana,Taylor,Houston,July 25, 2001
+5,Eve,Wilson,Phoenix,30-Jun-98
+6,Frank,Davis,Philadelphia,1978/11/02
+7,Grace,Clark,San Antonio,14 October 1983
+8,Hank,Lewis,San Diego,1992-04-17
+9,Ivy,Walker,Dallas,22/09/1975
+10,Jack,Hall,San Jose,03-28-1999
+11,Kelly,Allen,Austin,November 10, 1980
+12,Leo,Young,Jacksonville,15-Aug-02
+13,Mia,King,San Francisco,2004/07/19
+14,Ned,Wright,Columbus,01 January 1993
+15,Olivia,Scott,Seattle,1986-12-05
+16,Paul,Green,Denver,23/02/1972
+17,Quinn,Adams,Boston,May 30, 1997
+18,Rose,Baker,Nashville,11-Sep-88
+19,Sam,Gonzalez,Portland,1991/06/14
+20,Tina,Nelson,Las Vegas,27 March 2000
