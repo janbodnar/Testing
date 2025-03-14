@@ -1,0 +1,419 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>PHP Traits - Code Reuse</title>
+<link rel="stylesheet" href="/cfg/style.css" type="text/css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="PHP, Traits, Code Reuse, Learn PHP">
+<meta name="description" content="PHP Traits tutorial shows how to use traits for code reuse in PHP.">
+<meta name="author" content="Jan Bodnar">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9706709751191532"
+     crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+<header>
+<div>
+<a href="/" title="Home">ZetCode</a>
+</div>
+
+<nav>
+    <a title="All tutorials" href="/all/">All</a>
+    <a title="Go tutorials" href="/all/#go">Golang</a>
+    <a title="Python tutorials" href="/all/#python">Python</a>
+    <a title="C# tutorials" href="/all/#csharp">C#</a>
+    <a title="Java tutorials" href="/all/#java">Java</a>
+    <a title="JavaScript tutorials" href="/all/#js">JavaScript</a>
+    <a title="Subscribe to ZetCode news" href="http://zetcode.us13.list-manage.com/subscribe?u=9def9ccd4c70dbbaf691f90fc&id=6556210f80">Subscribe</a>
+</nav>
+</header>
+
+<div class="container">
+
+<div class="ltow">
+    
+<div id="ebooks">
+<h2 class="blu">Ebooks</h2>
+<ul>
+<li><a href="/ebooks/advancedpyqt5/">PyQt5 ebook</a></li>
+<li><a href="/ebooks/tkinter/">Tkinter ebook</a></li>
+<li><a href="/ebooks/sqlitepython/">SQLite Python</a></li>
+<li><a href="/ebooks/advancedwxpython/">wxPython ebook</a></li>
+<li><a href="/ebooks/windowsapi/">Windows API ebook</a></li>
+<li><a href="/ebooks/advancedjavaswing/">Java Swing ebook</a></li>
+<li><a href="/ebooks/javagames/">Java games ebook</a></li>
+<li><a href="/ebooks/mysqljava/">MySQL Java ebook</a></li>
+</ul>
+</div>
+
+</div>
+
+<div class="content">
+
+<h1>PHP Traits</h1>
+
+<p class="last_mod">
+last modified February 15, 2025
+</p>
+
+<p>
+In this article, we show how to use <code>traits</code> in PHP. Traits are a
+mechanism for code reuse in PHP, allowing developers to include methods in
+multiple classes without using inheritance. Traits are particularly useful for
+sharing functionality across unrelated classes.
+</p>
+
+<h2>Main Features of PHP Traits</h2>
+
+<ul>
+    <li>Code Reuse: Traits enable code reuse across multiple classes without
+    requiring inheritance.</li>
+    <li>Conflict Resolution: When multiple traits are used in a class and
+    methods conflict, PHP provides mechanisms to resolve these conflicts.</li>
+    <li>Modularization: Traits can be used to modularize code by grouping
+    related methods together.</li>
+    <li>Flexibility: Traits provide a flexible way to extend class functionality
+    without the limitations of single inheritance.</li>
+    <li>Method Overriding: Traits allow methods to be overridden by the classes
+    that use them.</li>
+</ul>
+
+
+<p>
+Traits are declared using the <code>trait</code> keyword and can be included in
+classes using the <code>use</code> keyword.
+</p>
+
+<h2>Basic Usage of Traits</h2>
+
+<p>
+The following example demonstrates how to define and use a trait in PHP.
+</p>
+
+<div class="codehead">main.php
+    <i class="fas fa-copy copy-icon" onclick="copyCode(this)"></i>
+</div>
+<pre class="code">
+&lt;?php
+
+trait Hello
+{
+    public function sayHello()
+    {
+        echo "Hello!";
+    }
+}
+
+class Greeting
+{
+    use Hello;
+}
+
+$greeting = new Greeting();
+$greeting-&gt;sayHello();
+</pre>
+
+<p>
+In this program, the <code>Hello</code> trait is defined with a
+<code>sayHello</code> method. The <code>Greeting</code> class includes the
+<code>Hello</code> trait using the <code>use</code> keyword and calls the
+<code>sayHello</code> method.
+</p>
+
+<pre class="compact">
+$ php main.php
+Hello!
+</pre>
+
+
+<h2>Multiple Traits</h2>
+
+<p>
+The following example demonstrates how to use multiple traits in a single class.
+</p>
+
+<div class="codehead">main.php
+  <i class="fas fa-copy copy-icon" onclick="copyCode(this)"></i>
+</div>
+<pre class="code">
+&lt;?php
+
+trait Hello
+{
+    public function sayHello()
+    {
+        echo "Hello!\n";
+    }
+}
+
+trait Today
+{
+    public function showToday()
+    {
+        echo date("Y-m-d H:i:s\n");
+    }
+}
+
+class Greeting
+{
+    use Hello;
+    use Today;
+}
+
+$greeting = new Greeting();
+$greeting-&gt;sayHello();
+$greeting-&gt; showToday();
+</pre>
+
+<p>
+In this program, the <code>Greeting</code> class includes both the
+<code>Hello</code> and <code>Today</code> traits. Then it calls methods from
+both traits.
+</p>
+
+<pre class="compact">
+$ php main.php
+Hello!
+2025-02-17 11:27:35
+</pre>
+
+<h2>Conflict Resolution</h2>
+
+<p>
+The following example demonstrates how to resolve conflicts when two traits have
+methods with the same name.
+</p>
+
+<div class="codehead">main.php
+  <i class="fas fa-copy copy-icon" onclick="copyCode(this)"></i>
+</div>
+<pre class="code">
+&lt;?php
+
+trait Loggable {
+    public function log($message) {
+        echo "Loggable: $message\n";
+    }
+}
+
+trait Notifiable {
+    public function log($message) {
+        echo "Notifiable: $message\n";
+    }
+}
+
+class User {
+    use Loggable, Notifiable {
+        Loggable::log insteadof Notifiable; 
+        Notifiable::log as notify;
+    }
+
+    public function create() {
+        $this-&gt;log("User created.");
+        $this-&gt;notify("Welcome, new user!");
+    }
+}
+
+$user = new User();
+$user-&gt;create();
+</pre>
+
+<p>
+In this program, the <code>User</code> class includes both the
+<code>Loggable</code> and <code>Notifiable</code> traits, which have conflicting
+<code>log</code> methods. The conflict is resolved using the
+<code>insteadof</code> and <code>as</code> keywords.
+</p>
+
+<pre class="compact">
+$ php main.php
+Loggable: User created.
+Notifiable: Welcome, new user!
+</pre>
+
+
+<h2>Traits with Properties</h2>
+
+<p>
+The following example demonstrates how to define and use properties in traits.
+</p>
+
+<div class="codehead">main.php
+  <i class="fas fa-copy copy-icon" onclick="copyCode(this)"></i>
+</div>
+<pre class="code">
+&lt;?php
+
+trait Loggable {
+    protected $logFile = "log.txt";
+
+    public function log($message) {
+        file_put_contents($this-&gt;logFile, $message . "\n", FILE_APPEND);
+    }
+}
+
+class User {
+    use Loggable;
+
+    public function create() {
+        $this-&gt;log("User created.");
+    }
+}
+
+$user = new User();
+$user-&gt;create();
+</pre>
+
+<p>
+In this program, the <code>Loggable</code> trait defines a <code>$logFile</code>
+property and a <code>log</code> method. The <code>User</code> class includes the
+<code>Loggable</code> trait and uses the <code>log</code> method to write to the
+log file.
+</p>
+
+
+<p>
+In the following program, we have two traits: <code>HelloMessage</code> 
+and <code>ColorMessage</code>. 
+</p>
+
+<div class="codehead">main.php</div>
+<pre class="code">
+&lt;?php
+
+trait HelloMessage
+{
+    public function hello(): void
+    {
+        echo "Hello there!\n";
+    }
+}
+
+
+trait ColorMessage
+{
+    public function showColorMessage($message, $color = 'default'): void
+    {
+        $colors = [
+            'default' =&gt; "\033[0m",    // Default color
+            'red' =&gt; "\033[31m",      // Red
+            'green' =&gt; "\033[32m",    // Green
+            'yellow' =&gt; "\033[33m",   // Yellow
+            'blue' =&gt; "\033[34m",     // Blue
+        ];
+
+        $colorCode = $colors[$color] ?? $colors['default'];
+        echo $colorCode . $message . "\n" . "\033[m";
+    }
+}
+
+class Info
+{
+    use HelloMessage;
+    use ColorMessage;
+}
+
+$info = new Info();
+
+$info-&gt;hello();
+
+$info-&gt;showColorMessage('Hello there!');
+$info-&gt;showColorMessage('Hello there!', 'green');
+$info-&gt;showColorMessage('Hello there!', 'blue');
+</pre>
+
+<p>
+The <code>HelloMessage</code> prints a simple hello message while the
+<code>ColorMessage</code> takes a message parameter and prints it in color.
+</p>
+
+<pre class="explanation">
+public function showColorMessage($message, $color = 'default'): void
+{
+    $colors = [
+        'default' =&gt; "\033[0m",    // Default color
+        'red' =&gt; "\033[31m",      // Red
+        'green' =&gt; "\033[32m",    // Green
+        'yellow' =&gt; "\033[33m",   // Yellow
+        'blue' =&gt; "\033[34m",     // Blue
+    ];
+
+    $colorCode = $colors[$color] ?? $colors['default'];
+    echo $colorCode . $message . "\n" . "\033[m";
+}
+</pre>
+
+<p>
+We can choose from the given color names or a default one is chosen.
+</p>
+
+<pre class="explanation">
+class Info
+{
+    use HelloMessage;
+    use ColorMessage;
+}
+</pre>
+
+<p>
+The <code>Hello</code> class uses both traits so it can call both <code>hello</code>
+and <code>showColorMessage</code> methods.
+</p>
+
+
+
+<h2>Source</h2>
+
+<p>
+<a href="https://www.php.net/manual/en/language.oop5.traits.php">PHP Traits - Documentation</a>
+</p>
+
+<p>
+In this article, we have shown how to use <code>traits</code> in PHP for code
+reuse. Traits are a powerful tool for sharing functionality across unrelated
+classes without using inheritance.
+</p>
+
+<h2 id="author">Author</h2>
+
+<p class="author">
+My name is Jan Bodnar and I am a passionate programmer with many years of
+programming experience. I have been writing programming articles since 2007. So
+far, I have written over 1400 articles and 8 e-books. I have over eight years of
+experience in teaching programming.
+</p>
+
+<p>
+List <a href="/all/#php">all PHP tutorials</a>.
+</p>
+
+</div> <!-- content -->
+
+</div> <!-- container -->
+
+<footer>
+
+<nav>
+<a title="Home page" href="/">Home</a> 
+<a title="Follow on Twitter" href="https://twitter.com/janbodnar">Twitter</a>
+<a title="Visit Github" href="https://github.com/janbodnar">Github</a>
+<a title="Subscribe to ZetCode news" href="http://zetcode.us13.list-manage.com/subscribe?u=9def9ccd4c70dbbaf691f90fc&id=6556210f80">Subscribe</a>
+<a title="Privacy policy" href="/privacy">Privacy</a> 
+<a title="About" href="/about/">About</a>
+</nav>
+
+<div>
+<span>&copy; 2007 - 2025 Jan Bodnar</span>
+<span>admin(at)zetcode.com</span>
+</div>
+
+</footer>
+
+<script src="/cfg/utils.js"></script>
+</body>
+</html>bbbbbbbbbbbbbbbbbbbbbbbbb
