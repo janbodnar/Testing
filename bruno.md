@@ -44,6 +44,76 @@ def current_time():
 
 ## Bruno scripts
 
+`environments/simple.bru`
+
+```
+vars {
+    NAME: Robert
+}
+```
+
+`home.bru`:
+
+```
+meta {
+  name: home
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:5000/
+}
+
+assert {
+  res.status: eq 200
+  res.body: contains Home page
+}
+```
+
+`hello.bru`:
+
+```
+meta {
+  name: hello
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:5000/hello/{{NAME}}
+}
+
+assert {
+  res.status: eq 200
+  res.body: contains Hello {{NAME}}
+  res.headers['content-type']: eq text/html; charset=utf-8
+}
+```
+
+`current-time.bru`:
+
+```
+meta {
+  name: current-time
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:5000/current-time
+}
+
+assert {
+  res.status: eq 200
+  res.body['current-time']: matches ^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$
+  res.headers['content-type']: eq application/json
+}
+```
+
+
+
+
 
 ```json
 {
