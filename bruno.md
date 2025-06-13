@@ -112,171 +112,440 @@ assert {
 ```
 
 
+## Authentication example
 
+```
+meta {
+  name: Create Task - No Title
+  type: http
+  seq: 6
+}
 
+post {
+  url: http://127.0.0.1:5000/tasks
+  body: json
+  auth: none
+}
 
-```json
-{
-  "name": "simple",
-  "version": "1",
-  "items": [
-    {
-      "type": "http",
-      "name": "current-time",
-      "filename": "current-time.bru",
-      "seq": 4,
-      "request": {
-        "url": "http://localhost:5000/current-time",
-        "method": "GET",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "none",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [
-          {
-            "name": "res.status",
-            "value": "eq 200",
-            "enabled": true,
-            "uid": "vg81MV7Y1BKTQ9SOjhgAb"
-          },
-          {
-            "name": "res.body['current-time']",
-            "value": "matches ^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$",
-            "enabled": true,
-            "uid": "lo5PSaPCaR5zd6OEJ3k8r"
-          },
-          {
-            "name": "res.headers['content-type']",
-            "value": "eq application/json",
-            "enabled": true,
-            "uid": "B61EqdAOCHWqUgSWY5wqu"
-          }
-        ],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "hello",
-      "filename": "hello.bru",
-      "seq": 2,
-      "request": {
-        "url": "http://localhost:5000/hello/{{NAME}}",
-        "method": "GET",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "none",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [
-          {
-            "name": "res.status",
-            "value": "eq 200",
-            "enabled": true,
-            "uid": "UyNczc2g2uRJ2c17G4aqO"
-          },
-          {
-            "name": "res.body",
-            "value": "contains Hello {{NAME}}",
-            "enabled": true,
-            "uid": "xN3oFMCXhttu64dbTi8B3"
-          },
-          {
-            "name": "res.headers['content-type']",
-            "value": "eq text/html; charset=utf-8",
-            "enabled": true,
-            "uid": "5nYc8MUSvpZRcnB7T8xWP"
-          }
-        ],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "home",
-      "filename": "home.bru",
-      "seq": 1,
-      "request": {
-        "url": "http://localhost:5000/",
-        "method": "GET",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "none",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [
-          {
-            "name": "res.status",
-            "value": "eq 200",
-            "enabled": true,
-            "uid": "JhraRijFFnAjkFHqa2G1d"
-          },
-          {
-            "name": "res.body",
-            "value": "contains Home page",
-            "enabled": true,
-            "uid": "gZ1bCwOMWXzksQwj5wNVw"
-          }
-        ],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    }
-  ],
-  "activeEnvironmentUid": "Euuur4eL1nEMeTypMqxAl",
-  "environments": [
-    {
-      "variables": [
-        {
-          "name": "NAME",
-          "value": "Robert",
-          "enabled": true,
-          "secret": false,
-          "type": "text"
-        }
-      ],
-      "name": "simple"
-    }
-  ],
-  "brunoConfig": {
-    "version": "1",
-    "name": "simple",
-    "type": "collection",
-    "ignore": [
-      "node_modules",
-      ".git"
-    ],
-    "size": 0.000762939453125,
-    "filesCount": 5
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+body:json {
+  {"description": "This task has no title"}
+}
+
+tests {
+  const response = res.getBody();
+  test("Status code is 400", function () {
+      expect(res.getStatus()).to.equal(400);
+  });
+  test("Title is required", function () {
+      expect(response.error).to.equal("Title is required");
+  });
+}
+```
+
+```
+meta {
+  name: Create Task
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://127.0.0.1:5000/tasks
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{AUTH_TOKEN}}
+}
+
+body:json {
+  {"title": "Test Task", "description": "This is a test task"}
+}
+
+vars:pre-request {
+  : 
+}
+
+script:pre-request {
+  console.log("pre request");
+  console.log(bru.getEnvVar('AUTH_TOKEN'));
+}
+
+script:post-response {
+  console.log("post response");
+  console.log(bru.getEnvVar('AUTH_TOKEN'));
+  console.log(bru.getVar('word'));
+}
+
+tests {
+  const response = res.getBody();
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  test("Task created with correct data", function () {
+      expect(response.title).to.equal("Test Task");
+      expect(response.description).to.equal("This is a test task");
+      expect(response.completed).to.equal(false);
+  });
+  bru.setEnvVar("TASK_ID", response.id);
+  
+  console.log("tests");
+  
+  console.log(bru.getEnvVar('AUTH_TOKEN'));
+}
+```
+
+```
+meta {
+  name: Delete Task - Not Found
+  type: http
+  seq: 12
+}
+
+delete {
+  url: http://127.0.0.1:5000/tasks/999
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+tests {
+  const response = res.getBody();
+  test("Status code is 404", function () {
+      expect(res.getStatus()).to.equal(404);
+  });
+  test("Task not found", function () {
+      expect(response.error).to.equal("Task not found");
+  });
+}
+```
+
+```
+meta {
+  name: Delete Task
+  type: http
+  seq: 11
+}
+
+delete {
+  url: http://127.0.0.1:5000/tasks/{{TASK_ID}}
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+tests {
+  const response = res.getBody();
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("Task deleted message", function () {
+      expect(response.message).to.equal("Task deleted");
+  });
+}
+```
+
+```
+meta {
+  name: Get All Tasks
+  type: http
+  seq: 7
+}
+
+get {
+  url: http://127.0.0.1:5000/tasks
+  body: none
+  auth: bearer
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+auth:bearer {
+  token: {{AUTH_TOKEN}}
+}
+
+tests {
+  const response = res.getBody();
+  console.log('Token:', response.token);
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("Response is an array", function () {
+      expect(Array.isArray(response)).to.be.true;
+  });
+}
+```
+
+```
+meta {
+  name: Get Task by ID - Not Found
+  type: http
+  seq: 9
+}
+
+get {
+  url: http://127.0.0.1:5000/tasks/999
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+tests {
+  const response = res.getBody();
+  test("Status code is 404", function () {
+      expect(res.getStatus()).to.equal(404);
+  });
+  test("Task not found", function () {
+      expect(response.error).to.equal("Task not found");
+  });
+}
+```
+
+```
+meta {
+  name: Get Task by ID
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://127.0.0.1:5000/tasks/1
+  body: none
+  auth: bearer
+}
+
+headers {
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+auth:bearer {
+  token: {{AUTH_TOKEN}}
+}
+
+tests {
+  const response = res.getBody();
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("Task has correct title", function () {
+      expect(response.title).to.equal("Test Task");
+  });
+}
+```
+
+```
+meta {
+  name: Login User - Invalid Credentials
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://127.0.0.1:5000/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {"username": "testuser", "password": "wrongpass"}
+}
+
+tests {
+  const response = res.getBody();
+  test("Status code is 401", function () {
+      expect(res.getStatus()).to.equal(401);
+  });
+  test("Invalid credentials", function () {
+      expect(response.error).to.equal("Invalid credentials");
+  });
+}
+```
+
+```
+meta {
+  name: Login User
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://127.0.0.1:5000/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "username": "testuser",
+    "password": "testpass123"
   }
+}
+
+script:post-response {
+  const response = res.getBody();
+  bru.setEnvVar("AUTH_TOKEN", response.token);
+  console.log("token", response.token);
+  console.log(`AUTH_TOKEN: ${bru.getEnvVar("AUTH_TOKEN")}`);
+}
+
+tests {
+  const response = res.getBody();
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("Token exists", function () {
+      expect(response.token).to.exist;
+  });
+  // bru.setEnvVar("AUTH_TOKEN", response.token);
+  // console.log('Token:', response.token);
+  // console.log('Environment AUTH_TOKEN:', bru.getEnvVar('AUTH_TOKEN'));
+}
+```
+
+```
+meta {
+  name: Register User - Duplicate Username
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://127.0.0.1:5000/register
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {"username": "testuser", "password": "testpass123"}
+}
+
+tests {
+  const response = res.getBody();
+  test("Status code is 400", function () {
+      expect(res.getStatus()).to.equal(400);
+  });
+  test("Username already exists", function () {
+      expect(response.error).to.equal("Username already exists");
+  });
 }
 ```
 
 
+```
+meta {
+  name: Register User
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://127.0.0.1:5000/register
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {"username": "testuser", "password": "testpass123"}
+}
+
+tests {
+  const response = res.getBody();
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  test("User registered successfully", function () {
+      expect(response.message).to.equal("User registered successfully");
+  });
+}
+```
+
+```
+meta {
+  name: Update Task
+  type: http
+  seq: 10
+}
+
+put {
+  url: http://127.0.0.1:5000/tasks/{{TASK_ID}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{AUTH_TOKEN}}
+}
+
+body:json {
+  {"title": "Updated Task", "description": "Updated description", "completed": true}
+}
+
+tests {
+  const response = res.getBody();
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  test("Task updated correctly", function () {
+      expect(response.title).to.equal("Updated Task");
+      expect(response.completed).to.equal(true);
+  });
+}
+```
+
+```
+meta {
+  name: Task API Tests
+  seq: 1
+}
+
+auth {
+  mode: none
+}
+
+vars:pre-request {
+  AUTH_TOKEN: 
+  TASK_ID: 
+}
+
+vars {
+  word: "falcon"
+}
+```
