@@ -1,5 +1,6 @@
-# Python-Tester
-Python testing course
+# Tester
+
+Testing docs
 
 
 ## Software characteristics 
