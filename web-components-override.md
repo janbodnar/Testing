@@ -1,5 +1,23 @@
 # Web components
 
+The application was created to test the Override content in Chrome for simple mock API.
+
+
+
+This is the structure:
+
+```
+app.mjs
+cards-container.css
+cards-container.mjs
+contact-card.css
+contact-card.mjs
+contact-card.template.mjs
+index.html
+styles.css
+```
+
+
 This is the home page, `index.html`.
 
 ```html
