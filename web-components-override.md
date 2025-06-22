@@ -1,7 +1,8 @@
 # Web components
 
-The application was created to test the Override content in Chrome for simple mock API.
-
+The application was created to test the Override content in Chrome for simple mock API.  
+First, we need to create a directory where the data is written and then we can select  
+the Override Content option.  
 
 
 This is the structure:
