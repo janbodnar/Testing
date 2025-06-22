@@ -365,5 +365,192 @@ The `cards-container.css` file:
 }
 ```
 
+The `contact-card.mjs` component:
 
+```mjs
+// Import the CSS module and template
+import cardStyles from './contact-card.css' with { type: 'css' };
+import { cardTemplate } from './contact-card.template.mjs';
+
+class ContactCard extends HTMLElement {
+    static get observedAttributes() {
+        return ['name', 'avatar', 'hobbies', 'theme'];
+    }
+
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+
+    connectedCallback() {
+        this.render();
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue !== newValue) {
+            this.render();
+        }
+    }
+
+    get name() {
+        return this.getAttribute('name') || 'Unknown';
+    }
+
+    get avatar() {
+        return this.getAttribute('avatar') || 'https://api.dicebear.com/6.x/lorelei/svg?seed=0';
+    }
+
+    get theme() {
+        return this.getAttribute('theme') || '#f5f5f5';
+    }
+
+    get hobbies() {
+        try {
+            const hobbies = this.getAttribute('hobbies');
+            if (!hobbies) return [];
+            // Handle both JSON strings and comma-separated values
+            if (hobbies.startsWith('[')) {
+                return JSON.parse(hobbies);
+            }
+            return hobbies.split(',').map(h => h.trim());
+        } catch (e) {
+            console.error('Error parsing hobbies:', e);
+            return [];
+        }
+    }
+
+    render() {
+        // Adopt the stylesheet
+        if (!this.shadowRoot.adoptedStyleSheets.includes(cardStyles)) {
+            this.shadowRoot.adoptedStyleSheets = [...this.shadowRoot.adoptedStyleSheets, cardStyles];
+        }
+
+        // Set the theme CSS variable
+        this.style.setProperty('--card-theme', this.theme);
+
+        // Generate the HTML
+        const hobbiesHTML = this.hobbies
+            .map(hobby => `<span class="hobby">${hobby}</span>`)
+            .join('');
+
+        // Set the inner HTML using the imported template
+        this.shadowRoot.innerHTML = cardTemplate(this.name, this.avatar, hobbiesHTML);
+    }
+}
+
+// Define the custom element
+if (!customElements.get('contact-card')) {
+    customElements.define('contact-card', ContactCard);
+}
+```
+
+The `contact-card.template.mjs` file:
+
+```mjs
+export const cardTemplate = (name, avatar, hobbiesHTML) => `
+    <div class="card" part="card">
+        <div class="card-header" part="header">
+            <img 
+                src="${avatar}" 
+                alt="${name}'s avatar" 
+                class="avatar" 
+                part="avatar"
+                loading="lazy"
+                width="100"
+                height="100">
+        </div>
+        <div class="card-body" part="body">
+            <h3 class="card-title" part="title">${name}</h3>
+            ${hobbiesHTML ? `
+                <div class="hobbies" part="hobbies">
+                    ${hobbiesHTML}
+                </div>
+            ` : ''}
+        </div>
+    </div>
+`;
+```
+
+The `contact-card.css` file:
+
+```css
+:host {
+    display: block;
+    margin-bottom: 20px;
+    --card-theme: var(--card-theme, #f5f5f5);
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    height: 150px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: var(--card-theme);
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid white;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 20px;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    margin: 0 0 10px 0;
+    color: #2c3e50;
+    font-size: 1.5rem;
+}
+
+.hobbies {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 15px;
+}
+
+.hobby {
+    background-color: #e8f4f8;
+    color: #2980b9;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .card {
+        max-width: 100%;
+    }
+}
+```
 
