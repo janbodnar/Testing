@@ -36,7 +36,10 @@ pytest==8.4.1
 pytest-flask==1.3.0
 python-dotenv==1.0.0
 pytest-cov==6.2.1
+requests==2.32.3
 ```
+
+The credentials are in the `.env` file:  
 
 ```.env
 # Basic Auth credentials
