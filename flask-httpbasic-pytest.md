@@ -10,14 +10,21 @@ Authorization: Basic <credentials>
 
 Here, `<credentials>` is a Base64-encoded string of the format `username:password`.
 
-### Key characteristics:
+## Key characteristics:
+
 - **Simplicity**: No cookies, sessions, or tokens—just a header with credentials.
 - **No encryption**: Base64 is *not* secure—it's just encoding. Anyone intercepting the request can decode it easily.
 - **Best used with HTTPS**: To protect credentials from being exposed in transit.
 - **Stateless**: Each request must include the credentials again—there’s no session tracking.
 
-It’s defined in [RFC 7617](https://datatracker.ietf.org/doc/html/rfc7617) and was one of the earliest authentication schemes used on the web.
+It’s defined in [RFC 7617](https://datatracker.ietf.org/doc/html/rfc7617) and was one of  
+the earliest authentication schemes used on the web.
 
+
+## Pytest example
+
+The example demonstrates the usage of HTTP Basic authentication with Pytest  
+tests.  
 
 ```.env
 # Basic Auth credentials
