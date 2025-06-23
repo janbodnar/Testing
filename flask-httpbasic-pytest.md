@@ -347,3 +347,193 @@ fetch("http://localhost:5000/private", {
 .then(data => console.log("Response:", data))
 .catch(error => console.error("Error:", error));
 ```
+
+
+
+
+## Insomnia test file
+
+```yaml
+type: collection.insomnia.rest/5.0
+name: My first collection
+meta:
+  id: wrk_5bcf42e89f7343c383301091a56f7914
+  created: 1750676738227
+  modified: 1750676738227
+  description: ""
+collection:
+  - url: http://localhost:5000/
+    name: Public Home page
+    meta:
+      id: req_9b8973c2208c442c8a961f6a3a1941af
+      created: 1750676738348
+      modified: 1750677194897
+      isPrivate: false
+      description: ""
+      sortKey: -1750676738348
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    authentication:
+      type: none
+    scripts:
+      afterResponse: >+
+        const response = insomnia.response.json();
+
+
+
+        // Test for status code
+
+        insomnia.test("Status code is 200", function () {
+            insomnia.response.to.have.status(200);
+        });
+
+
+        // test for public message
+
+        insomnia.test('Contains correct message text', function () {
+            insomnia.expect(response).to.have.property('message').that.is.a('string');
+        	  insomnia.expect(response.message).to.equal('Welcome to the public endpoint!');
+        });
+
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:5000/private
+    name: Get Private Endpoint as User
+    meta:
+      id: req_08623369363f4d31ab6e140c3917817e
+      created: 1750677224573
+      modified: 1750678168302
+      isPrivate: false
+      description: ""
+      sortKey: -1750552549395.5
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: "{{USER_NAME}}"
+      password: "{{USER_PASS}}"
+    scripts:
+      afterResponse: >
+        const response = insomnia.response.json();
+
+
+
+        // Test for status code
+
+        insomnia.test("Status code is 200", function () {
+            insomnia.response.to.have.status(200);
+        });
+
+
+        // test for private message
+
+        insomnia.test('Contains correct message text', function () {
+            insomnia.expect(response).to.have.property('message').that.is.a('string');
+        	  insomnia.expect(response.message).to.equal('Welcome to the private endpoint!');
+        });
+
+
+
+        insomnia.test('Contains correct role', function () {
+            insomnia.expect(response).to.have.property('role').that.is.a('string');
+            insomnia.expect(response.role).to.equal('user');
+        });
+
+
+        insomnia.test('Contains correct user', function () {
+            insomnia.expect(response).to.have.property('user').that.is.a('string');
+            insomnia.expect(response.user).to.equal('user');
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:5000/admin
+    name: Get Admin Endpoint
+    meta:
+      id: req_d042bcdeaf8b45ebb284b8e55f6ae685
+      created: 1750677387557
+      modified: 1750678135738
+      isPrivate: false
+      description: ""
+      sortKey: -1750490454919.25
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: false
+      username: "{{ADMIN_NAME}}"
+      password: "{{ADMIN_PASS}}"
+    scripts:
+      afterResponse: >
+        const response = insomnia.response.json();
+
+
+
+        // Test for status code
+
+        insomnia.test("Status code is 200", function () {
+            insomnia.response.to.have.status(200);
+        });
+
+
+        // test for admin message
+
+        insomnia.test('Contains correct message text', function () {
+            insomnia.expect(response).to.have.property('message').that.is.a('string');
+        	  insomnia.expect(response.message).to.equal('Welcome to the admin endpoint!');
+        });
+
+
+
+        insomnia.test('Contains correct role', function () {
+            insomnia.expect(response).to.have.property('role').that.is.a('string');
+            insomnia.expect(response.role).to.equal('admin');
+        });
+
+
+        insomnia.test('Contains correct user', function () {
+            insomnia.expect(response).to.have.property('user').that.is.a('string');
+            insomnia.expect(response.user).to.equal('admin');
+        });
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_957b686d719403627276c64c4040370036c80dbe
+    created: 1750676738233
+    modified: 1750678180170
+environments:
+  name: Base Environment
+  meta:
+    id: env_957b686d719403627276c64c4040370036c80dbe
+    created: 1750676738230
+    modified: 1750678180175
+    isPrivate: false
+```
