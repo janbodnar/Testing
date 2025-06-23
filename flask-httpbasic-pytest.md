@@ -26,6 +26,18 @@ the earliest authentication schemes used on the web.
 The example demonstrates the usage of HTTP Basic authentication with Pytest  
 tests.  
 
+The `requirements.txt` file:
+
+
+```python
+Flask==3.1.1
+Flask-HTTPAuth==4.8.0
+pytest==8.4.1
+pytest-flask==1.3.0
+python-dotenv==1.0.0
+pytest-cov==6.2.1
+```
+
 ```.env
 # Basic Auth credentials
 ADMIN_USERNAME=admin
@@ -35,6 +47,7 @@ USER_PASSWORD=userpass
 ```
 
 The flask application hides endpoints behind HTTP basic auth. 
+The following is `app.py` file: 
 
 ```python
 from flask import Flask, jsonify, g
@@ -105,17 +118,203 @@ if __name__ == '__main__':
     app.run(debug=True)
 ```
 
-The `requirements.txt` file:
+
+## Pytest
+
+The following are Pytest test in `tests\test_app.py`: 
+
+```python
+import pytest
+import base64
+import os
+import sys
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Add the parent directory to the Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from app import app, auth
+
+# Test credentials from environment variables
+ADMIN_USERNAME = os.getenv('ADMIN_USERNAME')
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
+USER_USERNAME = os.getenv('USER_USERNAME')
+USER_PASSWORD = os.getenv('USER_PASSWORD')
+
+# Create test client
+@pytest.fixture
+def client():
+    app.config['TESTING'] = True
+    with app.test_client() as client:
+        with app.app_context():
+            yield client
+
+def test_public_endpoint(client):
+    """Test that public endpoint is accessible without authentication"""
+    response = client.get('/')
+    assert response.status_code == 200
+    assert response.json == {"message": "Welcome to the public endpoint!"}
+
+def test_private_endpoint_unauthorized(client):
+    """Test that private endpoint requires authentication"""
+    response = client.get('/private')
+    assert response.status_code == 401
+    assert response.json == {"error": "Authentication required"}
+
+def test_private_endpoint_authorized(client):
+    """Test that private endpoint works with valid credentials"""
+    # Create basic auth header
+    auth_header = {
+        'Authorization': 'Basic ' + base64.b64encode(
+            f"{USER_USERNAME}:{USER_PASSWORD}".encode()
+        ).decode()
+    }
+    response = client.get('/private', headers=auth_header)
+    assert response.status_code == 200
+    data = response.json
+    assert data["message"] == "Welcome to the private endpoint!"
+    assert data["user"] == USER_USERNAME
+    assert data["role"] == "user"
+
+def test_admin_endpoint_unauthorized(client):
+    """Test that admin endpoint requires admin credentials"""
+    # Test with regular user credentials
+    auth_header = {
+        'Authorization': 'Basic ' + base64.b64encode(
+            f"{USER_USERNAME}:{USER_PASSWORD}".encode()
+        ).decode()
+    }
+    response = client.get('/admin', headers=auth_header)
+    assert response.status_code == 403
+    assert response.json == {"error": "Admin access required"}
+
+def test_admin_endpoint_authorized(client):
+    """Test that admin endpoint works with admin credentials"""
+    auth_header = {
+        'Authorization': 'Basic ' + base64.b64encode(
+            f"{ADMIN_USERNAME}:{ADMIN_PASSWORD}".encode()
+        ).decode()
+    }
+    response = client.get('/admin', headers=auth_header)
+    assert response.status_code == 200
+    data = response.json
+    assert data["message"] == "Welcome to the admin endpoint!"
+    assert data["user"] == ADMIN_USERNAME
+    assert data["role"] == "admin"
+```
+
+To run tests, we launch `pytest tests` from the project directory.  
 
 ```
-Flask==3.1.1
-Flask-HTTPAuth==4.8.0
-pytest==8.4.1
-pytest-flask==1.3.0
-python-dotenv==1.0.0
-pytest-cov==6.2.1
+pytest tests
+================================================== test session starts ==================================================
+platform win32 -- Python 3.12.7, pytest-8.4.1, pluggy-1.5.0
+rootdir: C:\Users\Jano\Documents\prog\testing\basicauth
+plugins: anyio-4.8.0, Faker-25.2.0, asyncio-0.25.3, base-url-2.1.0, cov-6.2.1, flask-1.3.0, playwright-0.7.0, socket-0.7.0, syrupy-4.8.1, time-machine-2.16.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None
+collected 5 items
+
+tests\test_app.py .....                                                                                            [100%]
+
+=================================================== 5 passed in 0.36s ===================================================
 ```
 
+## Using requests
+
+The following is additional `client.py` script that uses requests to connect to  
+the endpoints.  
+
+```python
+import requests
+from requests.auth import HTTPBasicAuth
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Server configuration
+BASE_URL = 'http://localhost:5000'
+
+# Get credentials from environment variables
+ADMIN_USERNAME = os.getenv('ADMIN_USERNAME')
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
+USER_USERNAME = os.getenv('USER_USERNAME')
+USER_PASSWORD = os.getenv('USER_PASSWORD')
+
+def test_public_endpoint():
+    """Test the public endpoint that doesn't require authentication"""
+    print("\nTesting public endpoint...")
+    url = f"{BASE_URL}/"
+    try:
+        response = requests.get(url)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.json()}")
+        return True
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
+
+def test_private_endpoint(username, password):
+    """Test the private endpoint with the given credentials"""
+    print(f"\nTesting private endpoint with user: {username}")
+    url = f"{BASE_URL}/private"
+    try:
+        response = requests.get(
+            url,
+            auth=HTTPBasicAuth(username, password)
+        )
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.json()}")
+        return True
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
+
+def test_admin_endpoint(username, password):
+    """Test the admin endpoint with the given credentials"""
+    print(f"\nTesting admin endpoint with user: {username}")
+    url = f"{BASE_URL}/admin"
+    try:
+        response = requests.get(
+            url,
+            auth=HTTPBasicAuth(username, password)
+        )
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.json()}")
+        return True
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
+
+if __name__ == "__main__":
+    # First, make sure the server is running at http://localhost:5000
+    print("Make sure the Flask server is running at http://localhost:5000\n")
+    
+    # Test public endpoint (no auth required)
+    test_public_endpoint()
+    
+    # Test private endpoint with regular user
+    test_private_endpoint(USER_USERNAME, USER_PASSWORD)
+    
+    # Test admin endpoint with regular user (should fail)
+    test_admin_endpoint(USER_USERNAME, USER_PASSWORD)
+    
+    # Test admin endpoint with admin user
+    test_admin_endpoint(ADMIN_USERNAME, ADMIN_PASSWORD)
+    
+    # Test private endpoint with invalid credentials
+    print("\nTesting private endpoint with invalid credentials...")
+    test_private_endpoint("invalid_user", "wrong_password")
+    
+    print("\nAll tests completed!")
+```
+
+
+## Httpie command
 
 Run http from CMD terminal: 
 
@@ -123,4 +322,25 @@ Run http from CMD terminal:
 set HTTP_USER=user
 set HTTP_PASS=userpass
 http --auth-type=basic --auth=%HTTP_USER%:%HTTP_PASS% http://localhost:5000/private
+```
+
+## Dev tools
+
+Use `fetch` and `btoa` to connect in Dev tools.
+
+
+```js
+const username = "user";
+const password = "userpass";
+const credentials = btoa(`${username}:${password}`);
+
+fetch("http://localhost:5000/private", {
+  method: "GET",
+  headers: {
+    "Authorization": `Basic ${credentials}`
+  }
+})
+.then(response => response.text())
+.then(data => console.log("Response:", data))
+.catch(error => console.error("Error:", error));
 ```
