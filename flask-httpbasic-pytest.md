@@ -1,5 +1,24 @@
 # Flask & HTTP Basic auth with Pytest
 
+**Basic authentication** is a simple method for enforcing access control over HTTP.  
+When a client (like a browser or an API tool) makes a request to a server that requires  
+authentication, it includes an `Authorization` header that looks like this:
+
+```
+Authorization: Basic <credentials>
+```
+
+Here, `<credentials>` is a Base64-encoded string of the format `username:password`.
+
+### Key characteristics:
+- **Simplicity**: No cookies, sessions, or tokens—just a header with credentials.
+- **No encryption**: Base64 is *not* secure—it's just encoding. Anyone intercepting the request can decode it easily.
+- **Best used with HTTPS**: To protect credentials from being exposed in transit.
+- **Stateless**: Each request must include the credentials again—there’s no session tracking.
+
+It’s defined in [RFC 7617](https://datatracker.ietf.org/doc/html/rfc7617) and was one of the earliest authentication schemes used on the web.
+
+
 ```.env
 # Basic Auth credentials
 ADMIN_USERNAME=admin
