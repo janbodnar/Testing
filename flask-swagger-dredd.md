@@ -133,7 +133,7 @@ if __name__ == '__main__':
     app.run(debug=True)
 ```
 
-From the `/apidocs` endpoint we download the JSON file and transform it into YAML with `yq` tool. 
+From the `/apidocs` endpoint we download the JSON file and transform it into YAML with `yq` tool.  
 
 ```
 yq -oy api_spec.json > api_spec.yaml
@@ -236,18 +236,18 @@ paths:
 swagger: "2.0"
 ```
 
-We use the YAML spec with the Dredd tool to automatically create tests for our endpoints. However, some data 
+We use the YAML spec with the Dredd tool to automatically create tests for our endpoints. However, some data  
 might be missing that Dredd is expecting. Using AI model, we fix this based on error messages we get.  
 
 For instance:
 
-1. **Adding `x-example: 1`** to the `user_id` path parameter - this provided Dredd with a concrete value to use  
-   when testing the `/users/{user_id}` endpoint
-3. **Adding example values** to the POST request body schema - this gave Dredd the actual data
-    to send in the request body
+1. **Adding `x-example: 1`** to the `user_id` path parameter - this provided Dredd with a concrete value to use   
+   when testing the `/users/{user_id}` endpoint. 
+3. **Adding example values** to the POST request body schema - this gave Dredd the actual data  
+    to send in the request body.
 
-The combination of the `consumes: application/json` field (which was already present) and the example values  
-ensured that Dredd sends properly formatted JSON requests with the correct Content-Type header.
+The combination of the `consumes: application/json` field (which was already present) and the example values   
+ensured that Dredd sends properly formatted JSON requests with the correct Content-Type header. 
 
 
 Finally, we run the tests.  
