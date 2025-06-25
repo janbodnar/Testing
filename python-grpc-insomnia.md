@@ -189,6 +189,8 @@ if __name__ == "__main__":
     run()
 ```
 
+This client tests the Endpoints in Python language.
+
 Generate gRPC code from the proto file:
 
 ```
@@ -196,6 +198,8 @@ python -m grpc_tools.protoc -I./proto --python_out=./src --grpc_python_out=./src
 ```
 
 The Insomnia test file:
+
+Insomnia supports testing gRPC endpoints. 
 
 ```yaml
 type: collection.insomnia.rest/5.0
