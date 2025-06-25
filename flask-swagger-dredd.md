@@ -10,8 +10,9 @@ Swagger features:
 - **Swagger UI**: Generates interactive documentation from your API spec, letting users try out endpoints directly in the browser.
 - **Swagger Codegen**: Automatically generates client libraries, server stubs, and API documentation in various programming languages.
 
-In essence, Swagger bridges the gap between API developers and consumers by making APIs easier to understand, test, and integrate.   
-It’s especially handy in API-first development, where the contract (API spec) is defined before any code is written. 
+In essence, Swagger bridges the gap between API developers and consumers by making APIs easier  
+to understand, test, and integrate. It’s especially handy in API-first development, where the contract (API spec)  
+is defined before any code is written. 
 
 ## Flask example
 
