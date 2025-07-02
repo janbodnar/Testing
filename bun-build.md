@@ -17,6 +17,8 @@ The `data.json`:
 ]
 ```
 
+The `index.html` file uses `fetch` to get the data and display in HTML table.  
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -57,6 +59,8 @@ The `data.json`:
 </html>
 ```
 
+The `index.ts` file starts a server that sends either an HTML file or JSON data. 
+
 ```ts
 import { serve } from 'bun';
 import data from './data.json';
@@ -77,3 +81,46 @@ const server = serve({
 
 console.log(`Application started at http://${server.hostname}:${server.port}`);
 ```
+
+```
+xh :3000/data | jq
+```
+
+Using `xh` to get the data and jq to process it.  
+
+```
+xh :3000/data | jq -r ".[0:3]"
+[
+  {
+    "name": "John Doe",
+    "age": 30,
+    "city": "New York"
+  },
+  {
+    "name": "Jane Smith",
+    "age": 25,
+    "city": "London"
+  },
+  {
+    "name": "Peter Jones",
+    "age": 35,
+    "city": "Paris"
+  }
+]
+```
+
+This displays first three rows.  
+
+
+```
+nu -c "xh :3000/data | from json | first 3 | select name age city"
+╭───┬─────────────┬─────┬──────────╮
+│ # │    name     │ age │   city   │
+├───┼─────────────┼─────┼──────────┤
+│ 0 │ John Doe    │  30 │ New York │
+│ 1 │ Jane Smith  │  25 │ London   │
+│ 2 │ Peter Jones │  35 │ Paris    │
+╰───┴─────────────┴─────┴──────────╯
+```
+
+Nushell can be used to display data in table format.  
