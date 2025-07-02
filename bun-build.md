@@ -82,6 +82,10 @@ const server = serve({
 console.log(`Application started at http://${server.hostname}:${server.port}`);
 ```
 
+## Build 
+
+We build the project into binary with: `bun build index.ts --compile --outfile app`. 
+
 ```
 xh :3000/data | jq
 ```
@@ -112,6 +116,8 @@ xh :3000/data | jq -r ".[0:3]"
 This displays first three rows.  
 
 
+## Using Nushell
+
 ```
 nu -c "xh :3000/data | from json | first 3 | select name age city"
 ╭───┬─────────────┬─────┬──────────╮
@@ -124,3 +130,13 @@ nu -c "xh :3000/data | from json | first 3 | select name age city"
 ```
 
 Nushell can be used to display data in table format.  
+
+## Inside Dev tools
+
+```
+fetch("http://localhost:3000/api")
+  .then(res => res.json())
+  .then(data => console.table(data))
+  .catch(err => console.error("Fetch error:", err));
+```
+
