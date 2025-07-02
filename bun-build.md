@@ -131,6 +131,20 @@ nu -c "xh :3000/data | from json | first 3 | select name age city"
 
 Nushell can be used to display data in table format.  
 
+## Powershell
+
+```pshell
+ Invoke-RestMethod http://localhost:3000/data | Select-Object -First 3 | Format-Table
+
+name           age city
+----           --- ----
+John Doe        30 New York
+Jane Smith      25 London
+Peter Jones     35 Paris
+Susan Williams  28 Sydney
+Michael Brown   42 Tokyo
+```
+
 ## Inside Dev tools
 
 ```
