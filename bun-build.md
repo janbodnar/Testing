@@ -93,7 +93,7 @@ xh :3000/data | jq
 Using `xh` to get the data and jq to process it.  
 
 ```
-xh :3000/data | jq -r ".[0:3]"
+xh :3000/data | jq ".[0:3]"
 [
   {
     "name": "John Doe",
@@ -134,7 +134,7 @@ Nushell can be used to display data in table format.
 ## Inside Dev tools
 
 ```
-fetch("http://localhost:3000/api")
+fetch("http://localhost:3000/data")
   .then(res => res.json())
   .then(data => console.table(data))
   .catch(err => console.error("Fetch error:", err));
