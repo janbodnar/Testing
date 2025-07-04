@@ -1,4 +1,4 @@
-# Githu Actions
+# Github Actions
 
 **GitHub Actions** is a powerful automation tool built right into GitHub that lets you 
 automate, customize, and execute software development workflows directly in your repository.
@@ -27,3 +27,41 @@ automate, customize, and execute software development workflows directly in your
 - Lint and format code on pull requests
 - Send Slack notifications when builds fail
 
+## Example
+
+Authenticate.
+
+```
+gh auth login
+```
+
+Create local project. 
+
+```
+mkdir my-project
+cd my-project
+echo "# My Project" > README.md
+git init
+```
+
+Add and commit files.
+
+```
+git add .
+git commit -m "Initial commit"
+```
+
+Create a New GitHub Repo with CLI
+
+```
+gh repo create my-project --public --source=. --remote=origin --push
+```
+
+Push changes. 
+
+```
+# After making changes
+git add .
+git commit -m "Update something"
+git push origin main
+```
