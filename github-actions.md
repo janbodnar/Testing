@@ -130,7 +130,7 @@ export default server;
 console.log("Listening on http://localhost:3000 ...");
 ```
 
-And this is a corresponding test file.  
+And this is the corresponding test file `index.test.js`:  
 
 ```js
 import { test, expect } from "bun:test";
