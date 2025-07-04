@@ -1,9 +1,9 @@
 # Github Actions
 
-**GitHub Actions** is a powerful automation tool built right into GitHub that lets you 
-automate, customize, and execute software development workflows directly in your repository.
+**GitHub Actions** is a powerful automation tool built right into GitHub that lets you  
+automate, customize, and execute software development workflows directly in your repository.  
 
-## What It Does
+What it does:
 
 - **CI/CD Automation**: Build, test, and deploy your code automatically when you push changes.
 - **Event-Driven Workflows**: Trigger actions on events like `push`, `pull_request`, `issue`, or even on a schedule.
@@ -158,4 +158,18 @@ test("GET /today", async () => {
 });
 ```
 
+The `package.json` file defines the scripts. 
+
+```json
+{
+  "name": "github-actions-demo",
+  "module": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "bun run index.ts",
+    "test": "bun test",
+    "build": "bun build ./index.ts --outfile=./dist/index"
+  }
+}
+```
 
