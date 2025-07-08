@@ -22,7 +22,7 @@ allows you to:
 | You need to verify interactions | Check if a method was called with the right arguments |
 
 
-### 🧱 Types of Test Doubles (Mocks Are One)
+## Types of Test Doubles (Mocks Are One)
 
 | Type | Description |
 |------|-------------|
@@ -31,7 +31,6 @@ allows you to:
 | **Fake** | A working but simplified implementation (e.g., in-memory DB) |
 | **Spy** | Records how it was used, but doesn’t fail the test if expectations aren’t met |
 
----
 
 ## Example (JavaScript with Jest)
 
