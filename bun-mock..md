@@ -110,7 +110,6 @@ parses the HTML, and extracts the titles and first paragraphs of the posts.
 
 ```js
 // sut.test.js
-// sut.test.js
 import { test, expect } from "bun:test";
 
 // Mock the global fetch function directly
