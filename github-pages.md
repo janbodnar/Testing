@@ -114,6 +114,18 @@ footer {
 }
 ```
 
+Create a local git repository:
 
+```
+git init && git add . && git commit -m "Initial commit"
+```
+
+Create a repo:
+
+```
+gh repo create serve-page --public --source . --remote=origin --push
+```
+
+Finally, enable GitHub Pages in the repository settings (set source to the `main` branch, `/root`).
 
 
